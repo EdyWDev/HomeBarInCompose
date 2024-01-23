@@ -21,18 +21,20 @@ object ApiModule {
     fun providesGsonBuilder(): Gson =
         GsonBuilder()
             .create()
+
+    @Singleton
+    @Provides
+    fun provideRetrofit(gson: Gson): Retrofit.Builder =
+        Retrofit.Builder()
+            .baseUrl("https://www.thecocktaildb.com/api/json/v1/1/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+
+    @Singleton
+    @Provides
+    fun provideHomeBarInComposeService(retrofit: Retrofit.Builder): HomeBarInComposeService =
+        retrofit
+            .build()
+            .create(HomeBarInComposeService::class.java)
+
 }
 
-@Singleton
-@Provides
-fun provideRetrofit(gson: Gson): Retrofit.Builder =
-    Retrofit.Builder()
-        .baseUrl("https://www.thecocktaildb.com/api/json/v1/1/")
-        .addConverterFactory(GsonConverterFactory.create(gson))
-
-@Singleton
-@Provides
-fun provideHomeBarInComposeService(retrofit: Retrofit.Builder): HomeBarInComposeService =
-    retrofit
-        .build()
-        .create(HomeBarInComposeService::class.java)
