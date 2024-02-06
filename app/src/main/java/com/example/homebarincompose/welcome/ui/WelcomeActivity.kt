@@ -4,22 +4,26 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.border
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.homebarincompose.ui.theme.HomeBarInComposeTheme
+import com.example.homebarincompose.R
+import com.example.homebarincompose.ui.theme.HomeBarTheme
 import com.example.homebarincompose.welcome.WelcomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class WelcomeActivity : ComponentActivity() {
@@ -28,23 +32,29 @@ class WelcomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            HomeBarInComposeTheme {
+            HomeBarTheme {
                 val state by viewModel.viewState.collectAsState()
-                Surface() {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    // color = MaterialTheme.colors.surface
+                ) {
 
+                    FirstView()
                 }
             }
         }
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstView() {
 
     Scaffold(
         topBar = {
             TopAppBar(
-                backgroundColor = Color.White,
+                // backgroundColor = Color.White,
                 title = {
                     Text(
                         text = "HomeBar",
@@ -66,20 +76,38 @@ fun FirstView() {
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp, vertical = 4.dp)
                     .fillMaxWidth(),
-                elevation = 2.dp,
-                backgroundColor = Color.White
-            ) {}
+                //  elevation = 2.dp,
+
+                //  backgroundColor = Color.White
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.pinkgin),
+                    contentDescription = "?",
+                   modifier = Modifier
+                       .aspectRatio(16f/16f)
+                      //  .fillMaxWidth(),
+                 //   contentScale = ContentScale.Crop
+
+                    //.weight(1F)
+                    //    modifier = Modifier.fillMaxSize()
+                )
+                /*        Icon(painter = painterResource(id = R.drawable.pinkgin),
+                            contentDescription = "" )*/
+
+                // czym jest content decsription
+                // mozer lepiej uzyc Glida do zaladowania zdjecia
+            }
             Button(
                 onClick = {},
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+                //     colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                    .border(
-                        width = 1.dp,
-                        color = Color.Black,
-                        shape = RoundedCornerShape(corner = CornerSize(16.dp))
-                    ),
+                /* .border(
+                     width = 1.dp,
+                     color = Color.Black,
+                     shape = RoundedCornerShape(corner = CornerSize(16.dp))
+                 )*/,
                 shape = RoundedCornerShape(corner = CornerSize(16.dp))
             ) {
                 Text(
@@ -89,15 +117,10 @@ fun FirstView() {
             }
             Button(
                 onClick = {},
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+                //  colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                    .border(
-                        width = 1.dp,
-                        color = Color.Black,
-                        shape = RoundedCornerShape(corner = CornerSize(16.dp))
-                    ),
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 shape = RoundedCornerShape(corner = CornerSize(16.dp))
             ) {
                 Text(
@@ -107,15 +130,16 @@ fun FirstView() {
             }
             Button(
                 onClick = {},
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+                //   colors = MaterialTheme.colors.surface.colorSpace,
+                //      colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                    .border(
-                        width = 1.dp,
-                        color = Color.Black,
-                        shape = RoundedCornerShape(corner = CornerSize(16.dp))
-                    ),
+                /* .border(
+                     width = 1.dp,
+                     color = Color.Black,
+                     shape = RoundedCornerShape(corner = CornerSize(16.dp))
+                 )*/,
                 shape = RoundedCornerShape(corner = CornerSize(16.dp))
             ) {
                 Text(
@@ -130,10 +154,18 @@ fun FirstView() {
     }
 }
 
+
+/*@Composable
+private fun Material3ThemeStart(){
+    MaterialTheme(
+        colorScheme = lightColorScheme(),
+        typography = Typography
+    )
+}*/
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    HomeBarInComposeTheme {
+    HomeBarTheme {
         FirstView()
     }
 }
