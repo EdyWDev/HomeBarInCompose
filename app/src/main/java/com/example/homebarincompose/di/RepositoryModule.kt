@@ -1,5 +1,7 @@
 package com.example.homebarincompose.di
 
+import com.example.homebarincompose.recipesearch.model.RecipeRepository
+import com.example.homebarincompose.recipesearch.model.RecipeService
 import com.example.homebarincompose.service.HomeBarInComposeRepository
 import com.example.homebarincompose.service.HomeBarInComposeService
 import dagger.Module
@@ -16,6 +18,6 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideHomeBarInComposeRepository(
-        homeBarInComposeService: HomeBarInComposeService
-    ): HomeBarInComposeRepository = HomeBarInComposeRepository(homeBarInComposeService)
+        recipeService: RecipeService
+    ): RecipeRepository = RecipeRepository(recipeService)
 }
