@@ -1,5 +1,6 @@
 package com.example.homebarincompose.di
 
+import com.example.homebarincompose.recipesearch.model.RecipeService
 import com.example.homebarincompose.service.HomeBarInComposeService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -31,10 +32,10 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideHomeBarInComposeService(retrofit: Retrofit.Builder): HomeBarInComposeService =
+    fun provideRecipeService(retrofit: Retrofit.Builder): RecipeService =
         retrofit
             .build()
-            .create(HomeBarInComposeService::class.java)
+            .create(RecipeService::class.java)
 
 }
 
