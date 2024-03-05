@@ -14,11 +14,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToSearchRecipe
 import com.example.homebarincompose.R
 import com.example.homebarincompose.ui.theme.HomeBarTheme
 import com.example.homebarincompose.welcome.WelcomeViewModel
@@ -36,10 +36,11 @@ class WelcomeActivity : ComponentActivity() {
                 val state by viewModel.viewState.collectAsState()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    // color = MaterialTheme.colors.surface
                 ) {
 
-                    FirstView()
+                    FirstView(
+                        findARecipeClicked = { navigateToSearchRecipe() }
+                    )
                 }
             }
         }
@@ -49,12 +50,13 @@ class WelcomeActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FirstView() {
+fun FirstView(
+    findARecipeClicked: () -> Unit
+) {
 
     Scaffold(
         topBar = {
             TopAppBar(
-                // backgroundColor = Color.White,
                 title = {
                     Text(
                         text = "HomeBar",
@@ -76,38 +78,19 @@ fun FirstView() {
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp, vertical = 4.dp)
                     .fillMaxWidth(),
-                //  elevation = 2.dp,
-
-                //  backgroundColor = Color.White
-            ) {
+               ) {
                 Image(
                     painter = painterResource(id = R.drawable.pinkgin),
                     contentDescription = "?",
-                   modifier = Modifier
-                       .aspectRatio(16f/16f)
-                      //  .fillMaxWidth(),
-                 //   contentScale = ContentScale.Crop
-
-                    //.weight(1F)
-                    //    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .aspectRatio(16f / 16f)
                 )
-                /*        Icon(painter = painterResource(id = R.drawable.pinkgin),
-                            contentDescription = "" )*/
-
-                // czym jest content decsription
-                // mozer lepiej uzyc Glida do zaladowania zdjecia
             }
             Button(
-                onClick = {},
-                //     colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+                onClick = findARecipeClicked,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                /* .border(
-                     width = 1.dp,
-                     color = Color.Black,
-                     shape = RoundedCornerShape(corner = CornerSize(16.dp))
-                 )*/,
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 shape = RoundedCornerShape(corner = CornerSize(16.dp))
             ) {
                 Text(
@@ -117,7 +100,6 @@ fun FirstView() {
             }
             Button(
                 onClick = {},
-                //  colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
@@ -130,16 +112,9 @@ fun FirstView() {
             }
             Button(
                 onClick = {},
-                //   colors = MaterialTheme.colors.surface.colorSpace,
-                //      colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-                modifier = Modifier
+                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                /* .border(
-                     width = 1.dp,
-                     color = Color.Black,
-                     shape = RoundedCornerShape(corner = CornerSize(16.dp))
-                 )*/,
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 shape = RoundedCornerShape(corner = CornerSize(16.dp))
             ) {
                 Text(
@@ -154,18 +129,12 @@ fun FirstView() {
     }
 }
 
-
-/*@Composable
-private fun Material3ThemeStart(){
-    MaterialTheme(
-        colorScheme = lightColorScheme(),
-        typography = Typography
-    )
-}*/
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     HomeBarTheme {
-        FirstView()
+        FirstView(
+            findARecipeClicked = {}
+        )
     }
 }
