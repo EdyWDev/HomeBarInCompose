@@ -1,12 +1,15 @@
 package com.example.homebarincompose.recipesearch
 
 import com.example.homebarincompose.recipesearch.model.Drinks
-import com.example.homebarincompose.recipesearch.model.DrinksModel
-import com.example.homebarincompose.recipesearch.model.Recipe
 import com.example.homebarincompose.recipesearch.model.TypeOfSearchEnum
 
 data class SearchViewState(
     val drinksList: List<Drinks> = emptyList(),
+    val isSearching: Boolean,
+    val searchText: String,
+    val indexOfTheSelectedValue: String,
+    val selectedTypeOfSearch: TypeOfSearchEnum
+   // val typeOfSearch: List<TypeOfSearchEnum>
    // val typeOfSearch: List<TypeOfSearchEnum>,
    // val indexOfSelectedSearch: Int,
    // val indexOfSelectedGlass: Int,

@@ -8,12 +8,11 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +21,7 @@ import com.example.homebarincompose.recipesearch.SearchViewModel
 import com.example.homebarincompose.recipesearch.SearchViewState
 import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.recipesearch.model.RecipeRepository
-import com.example.homebarincompose.recipesearch.model.RecipeService
+import com.example.homebarincompose.recipesearch.model.TypeOfSearchEnum
 import com.example.homebarincompose.ui.theme.HomeBarTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,8 +37,12 @@ class SearchActivity : ComponentActivity() {
         setContent {
             HomeBarTheme {
                 val state by viewModel.viewState.collectAsState()
+
+                Switch()
                 SearchScreen(
-                    viewModel = SearchViewModel(recipeRepository = RecipeRepository()),
+                    onQueryChange = {viewModel::onSearchTextChange},
+                    onSearch = { viewModel::onSearchTextChange },
+                    onActiveChange = { viewModel.onToogleSearch()},
                     state = state
                 )
 
@@ -47,35 +50,45 @@ class SearchActivity : ComponentActivity() {
         }
     }
 }
+@Composable
+fun Switch(){
+    var isChecked by remember { mutableStateOf(false) }
 
+    Switch(
+        checked = isChecked,
+        onCheckedChange = {isChecked = it},
+        colors = SwitchDefaults.colors(
+            checkedThumbColor = Color.Green,
+            uncheckedThumbColor = Color.Gray,
+            checkedTrackColor = Color.Green.copy(alpha=0.7f),
+            uncheckedTrackColor = Color.Gray.copy(alpha = 0.7f)
+        )
+    )
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SearchScreen(
-    viewModel: SearchViewModel,
+    onQueryChange: () -> Unit,
+    onSearch: () -> Unit,
+    onActiveChange: () -> Unit,
     state: SearchViewState
 ) {
-
-    val searchText = viewModel.searchText
-    val isSearching by viewModel.isSearching.collectAsState()
-    val listOfDrinkRecipe by viewModel.listOfDrinkRecipe.collectAsState()
 
     Scaffold(
         topBar = {
             SearchBar(
-                query = searchText.toString(),
-                onQueryChange = viewModel::onSearchTextChange,
-                onSearch = viewModel::onSearchTextChange,
-                active = isSearching,
-                onActiveChange = { viewModel.onToogleSearch() },
+                query = state.searchText,
+                onQueryChange = { onQueryChange.invoke() },
+                onSearch = { onSearch.invoke() },
+                active =  state.isSearching,
+                onActiveChange = {onActiveChange.invoke() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
                 LazyColumn {
-                    listOfDrinkRecipe?.let {
-                        items(it.size) { list ->
-                            //Text(text = list)
+                    items(state.drinksList) { list ->
                             Text(
                                 text = list.toString(),
                                 modifier = Modifier.padding(
@@ -86,7 +99,6 @@ fun SearchScreen(
                                 )
                             )
                         }
-                    }
                 }
             }
         }) { innerPadding ->
@@ -109,18 +121,38 @@ fun SearchScreen(
 
 @Composable
 fun ListOfRecipeDrinks(items: Drinks) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)
 
+    ) {
+      /*  Text(
+            text = items,
+            modifier = Modifier.padding(16.dp),
+            color = Color.Black,
+            fontWeight = FontWeight.Black,
+            fontStyle = FontStyle.Italic
+        )*/
+    }
 
 }
 
-    @Preview
+@Preview
     @Composable
     fun DefaultPreview() {
         HomeBarTheme {
 
+            Switch()
             SearchScreen(
-                viewModel = SearchViewModel(),
-                state = SearchViewState()
+                state = SearchViewState(
+                    indexOfTheSelectedValue = (""),
+                    isSearching = true,
+                    searchText = (""),
+                    selectedTypeOfSearch = TypeOfSearchEnum.NAME
+                ),
+                onQueryChange = {},
+                onActiveChange = {},
+                onSearch = {}
             )
         }
     }
