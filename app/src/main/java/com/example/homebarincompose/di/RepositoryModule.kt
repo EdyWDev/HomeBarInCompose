@@ -1,9 +1,7 @@
 package com.example.homebarincompose.di
 
-import com.example.homebarincompose.recipesearch.model.RecipeRepository
-import com.example.homebarincompose.recipesearch.model.RecipeService
-import com.example.homebarincompose.service.HomeBarInComposeRepository
-import com.example.homebarincompose.service.HomeBarInComposeService
+import com.example.homebarincompose.service.RecipeRepository
+import com.example.homebarincompose.service.RecipeService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
