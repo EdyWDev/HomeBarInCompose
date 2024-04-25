@@ -8,7 +8,9 @@ data class SearchViewState(
     val isSearching: Boolean,
     val searchText: String,
     val indexOfTheSelectedValue: String,
-    val selectedTypeOfSearch: TypeOfSearchEnum
+    val selectedTypeOfSearch: TypeOfSearchEnum,
+    val switchStateForName: Boolean,
+    val switchStateForIngredients: Boolean
    // val typeOfSearch: List<TypeOfSearchEnum>
    // val typeOfSearch: List<TypeOfSearchEnum>,
    // val indexOfSelectedSearch: Int,

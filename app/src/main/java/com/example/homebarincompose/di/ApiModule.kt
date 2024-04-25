@@ -1,7 +1,6 @@
 package com.example.homebarincompose.di
 
-import com.example.homebarincompose.recipesearch.model.RecipeService
-import com.example.homebarincompose.service.HomeBarInComposeService
+import com.example.homebarincompose.service.RecipeService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module

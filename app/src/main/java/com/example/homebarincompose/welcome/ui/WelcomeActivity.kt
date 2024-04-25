@@ -1,5 +1,6 @@
 package com.example.homebarincompose.welcome.ui
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -60,7 +61,7 @@ fun FirstView(
                 title = {
                     Text(
                         text = "HomeBar",
-                        color = Color.Black,
+                        color = Color.Black ,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
@@ -129,7 +130,8 @@ fun FirstView(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun DefaultPreview() {
     HomeBarTheme {
