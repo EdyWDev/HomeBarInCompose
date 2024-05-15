@@ -8,7 +8,6 @@ import com.example.homebarincompose.recipesearch.model.TypeOfSearchEnum
 import com.example.homebarincompose.service.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -23,7 +22,7 @@ class SearchViewModel @Inject constructor(
             drinksList = emptyList(),
             isSearching = false,
             searchText = "",
-            indexOfTheSelectedValue = "",
+            selectedValue = "",
             selectedTypeOfSearch = TypeOfSearchEnum.NAME,
             switchStateForName = false,
             switchStateForIngredients = false
@@ -31,18 +30,26 @@ class SearchViewModel @Inject constructor(
     )
     val viewState = _viewState
 
+
     init {
         searchForResult()
 
     }
 
-    private fun searchForResult() {
+
+ fun searchForResult() {
         viewModelScope.safeLaunch(
             actionToTake = {
+
+                // CZY TO ZAPYTANIE JEST OKK???
                 if (_viewState.value.switchStateForName) {
-                        recipeRepository.getRecipeByCocktailName(_viewState.value.searchText)
+                    _viewState.value.selectedValue =
+                        recipeRepository.getRecipeByCocktailName(_viewState.value.selectedValue).toString()
+                      //  recipeRepository.getRecipeByCocktailName()
+                    /*recipeRepository.getRecipeByCocktailName(_viewState.value.searchText)*/
                 } else {
-                    recipeRepository.getRecipeByIngredients(_viewState.value.toString())
+                    _viewState.value.selectedValue =
+                        recipeRepository.getRecipeByIngredients(_viewState.value.selectedValue).toString()
                 }
             }, onException = { error ->
                 Log.e("MYAPP", "exception", error)

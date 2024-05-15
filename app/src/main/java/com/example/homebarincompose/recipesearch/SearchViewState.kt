@@ -7,7 +7,7 @@ data class SearchViewState(
     val drinksList: List<Drinks> = emptyList(),
     val isSearching: Boolean,
     val searchText: String,
-    val indexOfTheSelectedValue: String,
+    var selectedValue: String,
     val selectedTypeOfSearch: TypeOfSearchEnum,
     val switchStateForName: Boolean,
     val switchStateForIngredients: Boolean
