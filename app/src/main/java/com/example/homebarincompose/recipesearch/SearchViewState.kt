@@ -4,10 +4,10 @@ import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.recipesearch.model.TypeOfSearchEnum
 
 data class SearchViewState(
-    val drinksList: List<Drinks> = emptyList(),
+    val drinksList: List<Drinks> /*= emptyList()*/,
     val isSearching: Boolean,
     val searchText: String,
-    var selectedValue: String,
+    //var selectedValue: String,
     val selectedTypeOfSearch: TypeOfSearchEnum,
     val switchStateForName: Boolean,
     val switchStateForIngredients: Boolean

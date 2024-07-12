@@ -22,34 +22,29 @@ class SearchViewModel @Inject constructor(
             drinksList = emptyList(),
             isSearching = false,
             searchText = "",
-            selectedValue = "",
+           // selectedValue = "",
             selectedTypeOfSearch = TypeOfSearchEnum.NAME,
             switchStateForName = false,
             switchStateForIngredients = false
         )
     )
-    val viewState = _viewState
+    val viewState = _viewState.asStateFlow()
 
-
-    init {
-        searchForResult()
-
-    }
-
-
- fun searchForResult() {
+ fun searchForResult(userInput: String) {
         viewModelScope.safeLaunch(
             actionToTake = {
-
-                // CZY TO ZAPYTANIE JEST OKK???
-                if (_viewState.value.switchStateForName) {
-                    _viewState.value.selectedValue =
-                        recipeRepository.getRecipeByCocktailName(_viewState.value.selectedValue).toString()
-                      //  recipeRepository.getRecipeByCocktailName()
-                    /*recipeRepository.getRecipeByCocktailName(_viewState.value.searchText)*/
-                } else {
-                    _viewState.value.selectedValue =
-                        recipeRepository.getRecipeByIngredients(_viewState.value.selectedValue).toString()
+                Log.d("SearchViewModel", "searchForResult called with: $userInput")
+                           val result = if(_viewState.value.selectedTypeOfSearch == TypeOfSearchEnum.NAME){
+                               recipeRepository.getRecipeByCocktailName(userInput)
+                           } else {
+                               recipeRepository.getRecipeByIngredients(userInput)
+                           }
+                Log.d("SearchViewModel", "Search result: $result")
+                _viewState.update {
+                    it.copy(
+                        drinksList = result.drinks,
+                      //  selectedValue = result.toString()
+                    )
                 }
             }, onException = { error ->
                 Log.e("MYAPP", "exception", error)
@@ -62,9 +57,10 @@ class SearchViewModel @Inject constructor(
         fun onSearchTextChange(text: String) {
             _viewState.update {
                 it.copy(
-                    searchText = it.searchText
+                    searchText = text
                 )
             }
+            searchForResult(text)
         }
 
         fun onToogleSearch() {

@@ -1,5 +1,6 @@
 package com.example.homebarincompose.service
 
+import android.util.Log
 import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.recipesearch.model.Recipe
 import com.example.homebarincompose.service.model.DrinksDTO
@@ -10,12 +11,21 @@ class RecipeRepository(
 
     suspend fun getRecipeByCocktailName(cocktailName: String): Recipe {
         val url = "$COCKTAIL_BY_NAME$cocktailName"
+        Log.d("API_REQUEST_NAME", "URL: $url")
         return homeBarInComposeService.getRecipe(url).toDomainRecipeModel()
+        Log.d("API_RESPONSE_NAME", "Response")
     }
 
     suspend fun getRecipeByIngredients(ingredients: String): Recipe{
         val url = "$COCKTAIL_BY_INGREDIENT$ingredients"
+        Log.d("API_REQUEST_INGREDIENTS", "URL: $url")
         return homeBarInComposeService.getRecipe(url).toDomainRecipeModel()
+        Log.d("API_RESPONSE_INGREDIENTS", "Response")
+    }
+
+    suspend fun getDrinkByID(id: String): Drinks?{
+        val url = "$COCKTAIL_BY_ID$id"
+        return homeBarInComposeService.getRecipeById(url).toDomainRecipeModel().drinks?.get(0)
     }
 }
 
@@ -72,7 +82,7 @@ fun DrinksDTO?.toDomainRecipeModel(): Recipe{
             strCreativeCommonsConfirmed = it.strCreativeCommonsConfirmed,
             dateModified = it.dateModified
         )
-    })
+    } ?: emptyList())
 }
 
 const val COCKTAIL_BY_NAME = "search.php?s="

@@ -1,6 +1,7 @@
 package com.example.homebarincompose.drinksDetails.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -41,8 +42,9 @@ class DrinksDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val drinkId = intent.getStringExtra("drink_id") ?: ""
-        viewModel.fetchDrinkDetails(drinkId)
+        val drinkId = intent.getIntExtra("DRINK_ID", 0) /*?: ""*/
+        Log.d("DrinksDetailsActivity", "Received DRINK_ID: $drinkId")
+        viewModel.fetchDrinkDetails(drinkId.toString())
         setContent {
             HomeBarTheme {
                 val state by viewModel.viewState.collectAsState()
@@ -78,19 +80,22 @@ class DrinksDetailsActivity : ComponentActivity() {
         val context = LocalContext.current
         val drink = state.drinkList.find { it.idDrink.toString() == state.idDrink }
 
-        if (drink == null) {
+        Log.d("DrinksDetailsScreen", "Current state: $state")
+        Log.d("DrinksDetailsScreen", "Found drink: $drink")
+
+       /* if (drink == null) {
             CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-        } else {
+        } else {*/
             Column(
                 modifier = Modifier.padding(paddingValues)
             ) {
-                drink.strDrink?.let { strDrink ->
+                drink?.strDrink?.let { strDrink ->
                     Text(
                         modifier = Modifier.padding(8.dp),
                         text = strDrink
                     )
                 }
-                drink.strDrinkThumb?.let { strDrinkThumb ->
+                drink?.strDrinkThumb?.let { strDrinkThumb ->
                     AsyncImage(
                         model = ImageRequest.Builder(context)
                             .data(strDrinkThumb)
@@ -103,14 +108,14 @@ class DrinksDetailsActivity : ComponentActivity() {
                     modifier = Modifier.padding(8.dp),
                     text = "INSTRUCTION"
                 )
-                drink.strInstructions?.let { strInstruction ->
+                drink?.strInstructions?.let { strInstruction ->
                     Text(
                         modifier = Modifier.padding(vertical = 8.dp),
                         text = strInstruction
                     )
                 }
             }
-        }
+       // }
     }
 
 
@@ -120,7 +125,7 @@ class DrinksDetailsActivity : ComponentActivity() {
         HomeBarTheme {
 
             DrinksDetailsScreen(
-                state = DrinksDetailsViewState(idDrink = ""),
+                state = DrinksDetailsViewState(idDrink = "", ),
                 paddingValues = PaddingValues()
             )
         }
