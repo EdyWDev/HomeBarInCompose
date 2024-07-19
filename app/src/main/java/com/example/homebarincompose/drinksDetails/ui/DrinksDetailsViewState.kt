@@ -4,5 +4,6 @@ import com.example.homebarincompose.recipesearch.model.Drinks
 
 data class DrinksDetailsViewState (
     val drinkList: List<Drinks> = emptyList(),
-    val idDrink: String = ""
+    val idDrink: String = "",
+    val isFavourite: Boolean
 )

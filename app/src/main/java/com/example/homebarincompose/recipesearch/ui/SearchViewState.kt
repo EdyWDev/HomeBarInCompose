@@ -1,4 +1,4 @@
-package com.example.homebarincompose.recipesearch
+package com.example.homebarincompose.recipesearch.ui
 
 import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.recipesearch.model.TypeOfSearchEnum

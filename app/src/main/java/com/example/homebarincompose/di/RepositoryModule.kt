@@ -1,5 +1,6 @@
 package com.example.homebarincompose.di
 
+import android.content.Context
 import com.example.homebarincompose.service.RecipeRepository
 import com.example.homebarincompose.service.RecipeService
 import dagger.Module
@@ -16,6 +17,7 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideHomeBarInComposeRepository(
+        context: Context,
         recipeService: RecipeService
-    ): RecipeRepository = RecipeRepository(recipeService)
+    ): RecipeRepository = RecipeRepository(recipeService, context)
 }

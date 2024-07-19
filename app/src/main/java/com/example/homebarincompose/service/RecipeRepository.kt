@@ -1,12 +1,20 @@
 package com.example.homebarincompose.service
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.text.BoringLayout
 import android.util.Log
 import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.recipesearch.model.Recipe
 import com.example.homebarincompose.service.model.DrinksDTO
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RecipeRepository(
-    private val homeBarInComposeService: RecipeService
+@Singleton
+class RecipeRepository @Inject constructor(
+    private val homeBarInComposeService:
+    RecipeService,
+    context: Context
 ) {
 
     suspend fun getRecipeByCocktailName(cocktailName: String): Recipe {
@@ -26,6 +34,28 @@ class RecipeRepository(
     suspend fun getDrinkByID(id: String): Drinks?{
         val url = "$COCKTAIL_BY_ID$id"
         return homeBarInComposeService.getRecipeById(url).toDomainRecipeModel().drinks?.get(0)
+    }
+
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("favorites", Context.MODE_PRIVATE)
+
+
+    private val favouriteDrinks = mutableSetOf<String>()
+
+    suspend fun isFavourite(drinkId: String): Boolean{
+        return favouriteDrinks.contains(drinkId)
+    }
+
+    fun addFavourite(drink: Drinks){
+        favouriteDrinks.add((drink.idDrink.toString()))
+    }
+
+    fun removeFavourite(drinkId: String){
+        favouriteDrinks.remove(drinkId)
+    }
+
+    suspend fun getFavouriteDrinks(): List<Drinks>{
+        return favouriteDrinks.mapNotNull { id -> getDrinkByID(id) }
     }
 }
 

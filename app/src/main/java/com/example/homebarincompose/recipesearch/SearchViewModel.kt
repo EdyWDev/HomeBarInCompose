@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homebarincompose.coroutinesScopeUtils.safeLaunch
 import com.example.homebarincompose.recipesearch.model.TypeOfSearchEnum
+import com.example.homebarincompose.recipesearch.ui.SearchViewState
 import com.example.homebarincompose.service.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*

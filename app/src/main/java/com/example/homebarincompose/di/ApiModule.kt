@@ -1,5 +1,7 @@
 package com.example.homebarincompose.di
 
+import android.app.Application
+import android.content.Context
 import com.example.homebarincompose.service.RecipeService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -36,5 +38,11 @@ object ApiModule {
             .build()
             .create(RecipeService::class.java)
 
+
+    @Singleton
+    @Provides
+    fun provideApplicationContext(application: Application): Context {
+        return application.applicationContext
+    }
 }
 

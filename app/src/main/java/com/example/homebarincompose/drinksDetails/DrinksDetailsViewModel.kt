@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homebarincompose.drinksDetails.ui.DrinksDetailsViewState
+import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.service.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,8 @@ class DrinksDetailsViewModel @Inject constructor(
     private val _viewState = MutableStateFlow(
         DrinksDetailsViewState(
             drinkList = emptyList(),
-            idDrink = ""
+            idDrink = "",
+            isFavourite = false
         )
     )
 
@@ -35,11 +37,25 @@ class DrinksDetailsViewModel @Inject constructor(
                 _viewState.update { currentState ->
                     currentState.copy(
                         drinkList = listOf(drink),
-                        idDrink = drink.idDrink.toString()
+                        idDrink = drink.idDrink.toString(),
+                        isFavourite = recipeRepository.isFavourite(drink.idDrink.toString())
                     )
                 }
             } else{
                 Log.d("DrinksDetailsViewModel", "No drink found with ID: $drinkId")
+            }
+        }
+    }
+
+    fun toggleFavourite(drink: Drinks){
+        viewModelScope.launch {
+            if(recipeRepository.isFavourite(drink.idDrink.toString())){
+                recipeRepository.removeFavourite(drink.idDrink.toString())
+            } else{
+                recipeRepository.addFavourite(drink)
+            }
+            _viewState.update { currentState ->
+                currentState.copy(isFavourite = recipeRepository.isFavourite(drink.idDrink.toString()))
             }
         }
     }

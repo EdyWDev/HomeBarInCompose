@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToFavouriteActivity
 import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToSearchRecipe
 import com.example.homebarincompose.R
 import com.example.homebarincompose.ui.theme.HomeBarTheme
@@ -40,7 +41,8 @@ class WelcomeActivity : ComponentActivity() {
                 ) {
 
                     FirstView(
-                        findARecipeClicked = { navigateToSearchRecipe() }
+                        findARecipeClicked = { navigateToSearchRecipe() },
+                        favouriteClicked = { navigateToFavouriteActivity() }
                     )
                 }
             }
@@ -52,7 +54,8 @@ class WelcomeActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstView(
-    findARecipeClicked: () -> Unit
+    findARecipeClicked: () -> Unit,
+    favouriteClicked: () -> Unit
 ) {
 
     Scaffold(
@@ -100,7 +103,7 @@ fun FirstView(
                 )
             }
             Button(
-                onClick = {},
+                onClick = favouriteClicked,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
@@ -136,7 +139,8 @@ fun FirstView(
 fun DefaultPreview() {
     HomeBarTheme {
         FirstView(
-            findARecipeClicked = {}
+            findARecipeClicked = {},
+            favouriteClicked = {}
         )
     }
 }

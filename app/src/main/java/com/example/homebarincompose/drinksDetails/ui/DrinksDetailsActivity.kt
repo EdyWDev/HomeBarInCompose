@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,6 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToSearchRecipe
 import com.example.homebarincompose.drinksDetails.DrinksDetailsViewModel
+import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.ui.theme.HomeBarTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -62,8 +64,13 @@ class DrinksDetailsActivity : ComponentActivity() {
                         )
                     }
                 ) { paddingValues ->
-                    DrinksDetailsScreen(state = state,
-                        paddingValues = paddingValues)
+                    DrinksDetailsScreen(
+                        state = state,
+                        paddingValues = paddingValues,
+                        onFavouriteClick = {drink ->
+                            viewModel.toggleFavourite(drink)
+                        }
+                    )
                 }
 
             }
@@ -75,7 +82,8 @@ class DrinksDetailsActivity : ComponentActivity() {
     fun DrinksDetailsScreen(
      //   drinkId: String,
         state: DrinksDetailsViewState,
-        paddingValues: PaddingValues
+        paddingValues: PaddingValues,
+        onFavouriteClick: (Drinks) -> Unit
     ) {
         val context = LocalContext.current
         val drink = state.drinkList.find { it.idDrink.toString() == state.idDrink }
@@ -83,19 +91,19 @@ class DrinksDetailsActivity : ComponentActivity() {
         Log.d("DrinksDetailsScreen", "Current state: $state")
         Log.d("DrinksDetailsScreen", "Found drink: $drink")
 
-       /* if (drink == null) {
+        if (drink == null) {
             CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-        } else {*/
+        } else {
             Column(
                 modifier = Modifier.padding(paddingValues)
             ) {
-                drink?.strDrink?.let { strDrink ->
+                drink.strDrink?.let { strDrink ->
                     Text(
                         modifier = Modifier.padding(8.dp),
                         text = strDrink
                     )
                 }
-                drink?.strDrinkThumb?.let { strDrinkThumb ->
+                drink.strDrinkThumb?.let { strDrinkThumb ->
                     AsyncImage(
                         model = ImageRequest.Builder(context)
                             .data(strDrinkThumb)
@@ -104,18 +112,25 @@ class DrinksDetailsActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
+                IconButton(onClick = {onFavouriteClick(drink)}){
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = "Add to favourites",
+                        tint = if(state.isFavourite) Color.Yellow else Color.Gray
+                    )
+                }
                 Text(
                     modifier = Modifier.padding(8.dp),
                     text = "INSTRUCTION"
                 )
-                drink?.strInstructions?.let { strInstruction ->
+                drink.strInstructions?.let { strInstruction ->
                     Text(
                         modifier = Modifier.padding(vertical = 8.dp),
                         text = strInstruction
                     )
                 }
             }
-       // }
+        }
     }
 
 
@@ -125,8 +140,9 @@ class DrinksDetailsActivity : ComponentActivity() {
         HomeBarTheme {
 
             DrinksDetailsScreen(
-                state = DrinksDetailsViewState(idDrink = "", ),
-                paddingValues = PaddingValues()
+                state = DrinksDetailsViewState(idDrink = "", isFavourite = false ),
+                paddingValues = PaddingValues(),
+                onFavouriteClick = {}
             )
         }
     }
