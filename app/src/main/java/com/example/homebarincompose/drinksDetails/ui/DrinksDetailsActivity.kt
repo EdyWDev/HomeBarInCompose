@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
@@ -106,50 +108,68 @@ fun DrinksDetailsScreen(
     if (drink == null) {
         CircularProgressIndicator(modifier = Modifier.padding(16.dp))
     } else {
-        Column(
-            modifier = Modifier.padding(paddingValues)
+        LazyColumn(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                //.verticalScroll(rememberScrollState())
         ) {
-            drink.strDrink?.let { strDrink ->
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = strDrink
-                )
+            item{
+                drink.strDrink?.let { strDrink ->
+                    Text(
+                        modifier = Modifier.padding(8.dp),
+                        text = strDrink
+                    )
+                }
             }
-            drink.strDrinkThumb?.let { strDrinkThumb ->
-                AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(strDrinkThumb)
-                        .build(),
-                    contentDescription = "This is a drink image",
-                    modifier = Modifier.fillMaxWidth()
-                )
+            item{
+                drink.strDrinkThumb?.let { strDrinkThumb ->
+                    AsyncImage(
+                        model = ImageRequest.Builder(context)
+                            .data(strDrinkThumb)
+                            .build(),
+                        contentDescription = "This is a drink image",
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
-            IconButton(onClick = { onFavouriteClick(drink) }) {
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = "Add to favourites",
-                    tint = if (state.isFavourite) Color.Yellow else Color.Gray
-                )
+            item{
+                IconButton(onClick = { onFavouriteClick(drink) }) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = "Add to favourites",
+                        tint = if (state.isFavourite) Color.Yellow else Color.Gray
+                    )
+                }
             }
-            drink.strInstructions?.let { Share(text = it, context = context) }
 
-            Text(
-                modifier = Modifier.padding(vertical = 16.dp),
-                text = "INSTRUCTION"
-            )
-            drink.strInstructions?.let { strInstruction ->
+
+            item{
+                drink.strInstructions?.let { Share(text = it, context = context) }
+            }
+            item{
                 Text(
                     modifier = Modifier.padding(vertical = 16.dp),
-                    text = strInstruction
+                    text = "INSTRUCTION"
                 )
             }
-            Text(
-                modifier = Modifier.padding(vertical = 16.dp),
-                text = "INGREDIENTS"
-            )
+            item{
+                drink.strInstructions?.let { strInstruction ->
+                    Text(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        text = strInstruction
+                    )
+                }
+            }
+           item{
+               Text(
+                   modifier = Modifier.padding(vertical = 16.dp),
+                   text = "INGREDIENTS"
+               )
+           }
 
             drinkIngredients.takeIf{it.isNotEmpty()}?.let { ingredients->
-                LazyColumn {
                     items(ingredients){ingredient ->
                         Text(
                             text = "${ingredient.unitIngredient} ${ingredient.ingredient}",
@@ -157,17 +177,12 @@ fun DrinksDetailsScreen(
                         )
                     }
                 }
-            } ?: run{
-                Text(
-                    modifier = Modifier.padding(16.dp),
-                    text = "No ingredients available"
-                )
             }
             }
 
 
         }
-    }
+
 
 
 @Composable
