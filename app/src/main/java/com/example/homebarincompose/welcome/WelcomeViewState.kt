@@ -1,6 +1,10 @@
 package com.example.homebarincompose.welcome
 
+import com.example.homebarincompose.recipesearch.model.Drinks
 
-class WelcomeViewState {
+
+data class WelcomeViewState(
+    val randomDrinks : Drinks?
+) {
 
 }

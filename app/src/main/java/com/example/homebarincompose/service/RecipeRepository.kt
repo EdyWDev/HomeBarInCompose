@@ -2,7 +2,6 @@ package com.example.homebarincompose.service
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.text.BoringLayout
 import android.util.Log
 import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.recipesearch.model.Recipe
@@ -28,12 +27,16 @@ class RecipeRepository @Inject constructor(
         val url = "$COCKTAIL_BY_INGREDIENT$ingredients"
         Log.d("API_REQUEST_INGREDIENTS", "URL: $url")
         return homeBarInComposeService.getRecipe(url).toDomainRecipeModel()
-        Log.d("API_RESPONSE_INGREDIENTS", "Response")
+    }
+
+    suspend fun getRandomDrink(): Drinks? {
+        val url = RANDOM_COCKTAIL
+        return homeBarInComposeService.getRandomDrink(url).toDomainRecipeModel().drinks[0]
     }
 
     suspend fun getDrinkByID(id: String): Drinks?{
         val url = "$COCKTAIL_BY_ID$id"
-        return homeBarInComposeService.getRecipeById(url).toDomainRecipeModel().drinks?.get(0)
+        return homeBarInComposeService.getRecipeById(url).toDomainRecipeModel().drinks[0]
     }
 
     private val sharedPreferences: SharedPreferences =

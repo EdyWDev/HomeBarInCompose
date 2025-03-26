@@ -1,5 +1,6 @@
 package com.example.homebarincompose.service
 
+import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.service.model.DrinksDTO
 import retrofit2.http.GET
 import retrofit2.http.Url
@@ -12,5 +13,8 @@ interface RecipeService {
      suspend fun getRecipe() : RecipeDTO*/
     @GET
     suspend fun getRecipeById(@Url url: String) : DrinksDTO
+
+    @GET
+    suspend fun getRandomDrink(@Url url: String): DrinksDTO?
 
 }

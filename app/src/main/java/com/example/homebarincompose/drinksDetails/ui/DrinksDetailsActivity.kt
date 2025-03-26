@@ -1,5 +1,7 @@
 package com.example.homebarincompose.drinksDetails.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -9,9 +11,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToSearchRecipe
@@ -34,6 +41,9 @@ import com.example.homebarincompose.drinksDetails.DrinksDetailsViewModel
 import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.ui.theme.HomeBarTheme
 import dagger.hilt.android.AndroidEntryPoint
+import com.example.homebarincompose.recipesearch.model.UnitAndIngredients
+
+
 
 @AndroidEntryPoint
 class DrinksDetailsActivity : ComponentActivity() {
@@ -58,7 +68,7 @@ class DrinksDetailsActivity : ComponentActivity() {
                             },
                             navigationIcon = {
                                 IconButton(onClick = { navigateToSearchRecipe() }) {
-                                    Icon(Icons.Filled.ArrowBack, "back", tint = Color.Black)
+                                    Icon(Icons.Filled.ArrowBack, "back", tint = Color.White)
                                 }
                             }
                         )
@@ -67,10 +77,11 @@ class DrinksDetailsActivity : ComponentActivity() {
                     DrinksDetailsScreen(
                         state = state,
                         paddingValues = paddingValues,
-                        onFavouriteClick = {drink ->
+                        onFavouriteClick = { drink ->
                             viewModel.toggleFavourite(drink)
                         }
                     )
+
                 }
 
             }
@@ -78,71 +89,117 @@ class DrinksDetailsActivity : ComponentActivity() {
     }
 }
 
-    @Composable
-    fun DrinksDetailsScreen(
-     //   drinkId: String,
-        state: DrinksDetailsViewState,
-        paddingValues: PaddingValues,
-        onFavouriteClick: (Drinks) -> Unit
-    ) {
-        val context = LocalContext.current
-        val drink = state.drinkList.find { it.idDrink.toString() == state.idDrink }
+@Composable
+fun DrinksDetailsScreen(
+    //   drinkId: String,
+    state: DrinksDetailsViewState,
+    paddingValues: PaddingValues,
+    onFavouriteClick: (Drinks) -> Unit
+) {
+    val context = LocalContext.current
+    val drink = state.drinkList.find { it.idDrink.toString() == state.idDrink }
+    val drinkIngredients = state.listOfIngredients
 
-        Log.d("DrinksDetailsScreen", "Current state: $state")
-        Log.d("DrinksDetailsScreen", "Found drink: $drink")
+    Log.d("DrinksDetailsScreen", "Current state: $state")
+    Log.d("DrinksDetailsScreen", "Found drink: $drink")
 
-        if (drink == null) {
-            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-        } else {
-            Column(
-                modifier = Modifier.padding(paddingValues)
-            ) {
-                drink.strDrink?.let { strDrink ->
-                    Text(
-                        modifier = Modifier.padding(8.dp),
-                        text = strDrink
-                    )
-                }
-                drink.strDrinkThumb?.let { strDrinkThumb ->
-                    AsyncImage(
-                        model = ImageRequest.Builder(context)
-                            .data(strDrinkThumb)
-                            .build(),
-                        contentDescription = "This is a drink image",
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-                IconButton(onClick = {onFavouriteClick(drink)}){
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = "Add to favourites",
-                        tint = if(state.isFavourite) Color.Yellow else Color.Gray
-                    )
-                }
+    if (drink == null) {
+        CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+    } else {
+        Column(
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            drink.strDrink?.let { strDrink ->
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = "INSTRUCTION"
+                    text = strDrink
                 )
-                drink.strInstructions?.let { strInstruction ->
-                    Text(
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        text = strInstruction
-                    )
-                }
             }
-        }
-    }
+            drink.strDrinkThumb?.let { strDrinkThumb ->
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .data(strDrinkThumb)
+                        .build(),
+                    contentDescription = "This is a drink image",
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            IconButton(onClick = { onFavouriteClick(drink) }) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Add to favourites",
+                    tint = if (state.isFavourite) Color.Yellow else Color.Gray
+                )
+            }
+            drink.strInstructions?.let { Share(text = it, context = context) }
 
-
-    @Preview
-    @Composable
-    fun DefaultPreview() {
-        HomeBarTheme {
-
-            DrinksDetailsScreen(
-                state = DrinksDetailsViewState(idDrink = "", isFavourite = false ),
-                paddingValues = PaddingValues(),
-                onFavouriteClick = {}
+            Text(
+                modifier = Modifier.padding(vertical = 16.dp),
+                text = "INSTRUCTION"
             )
+            drink.strInstructions?.let { strInstruction ->
+                Text(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    text = strInstruction
+                )
+            }
+            Text(
+                modifier = Modifier.padding(vertical = 16.dp),
+                text = "INGREDIENTS"
+            )
+
+            drinkIngredients.takeIf{it.isNotEmpty()}?.let { ingredients->
+                LazyColumn {
+                    items(ingredients){ingredient ->
+                        Text(
+                            text = "${ingredient.unitIngredient} ${ingredient.ingredient}",
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
+                }
+            } ?: run{
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = "No ingredients available"
+                )
+            }
+            }
+
+
         }
     }
+
+
+@Composable
+fun AddToFavourite(){
+
+}
+@Composable
+fun Share(text: String, context: Context) {
+    val sendIntent = Intent(Intent.ACTION_SEND).apply {
+        putExtra(Intent.EXTRA_TEXT, text)
+        type = "text/plain"
+    }
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    Button(onClick = {
+        startActivity(context, shareIntent, null)
+    }) {
+        Icon(imageVector = Icons.Default.Share, contentDescription = null)
+        Text("Share", modifier = Modifier.padding(start = 8.dp))
+
+    }
+}
+
+
+@Preview
+@Composable
+fun DefaultPreview() {
+    HomeBarTheme {
+
+        DrinksDetailsScreen(
+            state = DrinksDetailsViewState(idDrink = "", isFavourite = false),
+            paddingValues = PaddingValues(),
+            onFavouriteClick = {}
+        )
+    }
+}

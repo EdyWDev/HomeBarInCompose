@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -93,6 +94,7 @@ class SearchActivity : ComponentActivity() {
                 )
                 { paddingValues ->
 
+
                     SearchScreen(
                         onQueryChange = { viewModel::onSearchTextChange },
                         onSearch = { viewModel::onSearchTextChange },
@@ -102,6 +104,7 @@ class SearchActivity : ComponentActivity() {
                         onSearchCategoryClicked = viewModel::onToogleCategoryOfSearch,
                         onDoneKeyboard = viewModel::searchForResult
                     )
+
                 }
             }
         }
@@ -117,6 +120,7 @@ fun Switch(innerPadding: PaddingValues) {
         contentPadding = innerPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+
 
         item {
             val switchStateForName = remember { mutableStateOf(false) }
@@ -144,6 +148,7 @@ fun Switch(innerPadding: PaddingValues) {
 
         }
         item {
+
             val switchStateForIngredients = remember { mutableStateOf(false) }
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -188,6 +193,13 @@ fun SearchScreen(
             .padding(paddingValues)
             .verticalScroll(scrollState)
     ) {
+        Text(text = "  Find Your Recipe",
+            letterSpacing = 5.sp,
+            fontFamily = FontFamily.Cursive,
+            textAlign = TextAlign.Center,
+            fontSize = 48.sp,
+            //   modifier = Modifier.foldIn()
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
