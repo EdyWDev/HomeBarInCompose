@@ -7,10 +7,14 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -30,6 +34,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -135,19 +140,27 @@ fun DrinksDetailsScreen(
                 }
             }
             item{
-                IconButton(onClick = { onFavouriteClick(drink) }) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = "Add to favourites",
-                        tint = if (state.isFavourite) Color.Yellow else Color.Gray
-                    )
-                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    IconButton(onClick = { onFavouriteClick(drink) }) {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Add to favourites",
+                            tint = if (state.isFavourite) Color.Yellow else Color.Gray
+                        )
+                    }
+
+                Spacer(modifier = Modifier.width(8.dp))
+              Share(drink.strInstructions ?: "", context)
+
+            }
             }
 
-
-            item{
-                drink.strInstructions?.let { Share(text = it, context = context) }
-            }
             item{
                 Text(
                     modifier = Modifier.padding(vertical = 16.dp),
@@ -183,12 +196,6 @@ fun DrinksDetailsScreen(
 
         }
 
-
-
-@Composable
-fun AddToFavourite(){
-
-}
 @Composable
 fun Share(text: String, context: Context) {
     val sendIntent = Intent(Intent.ACTION_SEND).apply {
