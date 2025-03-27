@@ -51,16 +51,33 @@ class RecipeRepository @Inject constructor(
 
     fun addFavourite(drink: Drinks){
         favouriteDrinks.add((drink.idDrink.toString()))
+        saveFavouritesDrinks()
     }
 
     fun removeFavourite(drinkId: String){
         favouriteDrinks.remove(drinkId)
+        saveFavouritesDrinks()
     }
 
     suspend fun getFavouriteDrinks(): List<Drinks>{
         return favouriteDrinks.mapNotNull { id -> getDrinkByID(id) }
     }
+    private fun saveFavouritesDrinks(){
+        val editor = sharedPreferences.edit()
+        editor.putString("favouriteDrinks", favouriteDrinks.toString())
+        editor.apply()
+    }
+
+    private fun loadFavouriteDrinks(){
+        val savedFavouriteDrinks = sharedPreferences.getStringSet("favouriteDrinks", mutableSetOf()) ?: mutableSetOf()
+        favouriteDrinks.clear()
+        favouriteDrinks.addAll(savedFavouriteDrinks)
+    }
+    init {
+        loadFavouriteDrinks()
+    }
 }
+
 
 fun DrinksDTO?.toDomainRecipeModel(): Recipe{
     return Recipe(drinks=this?.drinks?.map {

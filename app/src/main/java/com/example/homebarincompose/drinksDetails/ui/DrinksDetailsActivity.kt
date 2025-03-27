@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -150,17 +151,18 @@ fun DrinksDetailsScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
+                   // verticalAlignment = Alignment.BottomEnd
                 ){
                     IconButton(onClick = { onFavouriteClick(drink) }) {
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = "Add to favourites",
-                            tint = if (state.isFavourite) Color.Yellow else Color.Gray
+                            tint = if (state.isFavourite) Color.Yellow else Color.Gray,
+                            modifier = Modifier.padding(end = 8.dp)
                         )
                     }
 
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(16.dp))
               Share(drink.strInstructions ?: "", context)
 
             }
@@ -175,7 +177,7 @@ fun DrinksDetailsScreen(
             item{
                 drink.strInstructions?.let { strInstruction ->
                     Text(
-                        modifier = Modifier.padding(vertical = 16.dp),
+                        modifier = Modifier.padding(vertical = 8.dp),
                         text = strInstruction
                     )
                 }
@@ -208,10 +210,13 @@ fun Share(text: String, context: Context) {
         type = "text/plain"
     }
     val shareIntent = Intent.createChooser(sendIntent, null)
-    Button(onClick = {
+    Button(
+        onClick = {
         startActivity(context, shareIntent, null)
     }) {
-        Icon(imageVector = Icons.Default.Share, contentDescription = null)
+        Icon(
+            imageVector = Icons.Default.Share,
+            contentDescription = null)
         Text("Share", modifier = Modifier.padding(start = 8.dp))
 
     }
