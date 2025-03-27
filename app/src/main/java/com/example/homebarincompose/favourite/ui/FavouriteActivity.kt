@@ -9,9 +9,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -118,10 +121,11 @@ fun FavouriteDrinkScreen(
     paddingValues: PaddingValues
 ) {
     val context = LocalContext.current
-    Column(
-        modifier = Modifier.padding(paddingValues)
+    LazyColumn(
+        contentPadding = paddingValues,
+        modifier = Modifier.fillMaxSize()
     ) {
-        favouriteDrinks.forEach { drink ->
+        items(favouriteDrinks){ drink ->
             FavouriteDrinkCard(drink = drink, onDrinkClick = {
                 val intent = Intent(context, DrinksDetailsActivity::class.java)
                 intent.putExtra("DRINK_ID", drink.idDrink)
@@ -132,29 +136,4 @@ fun FavouriteDrinkScreen(
     }
 }
 
-
-/*    @Composable
-    fun DrinkItem(drink: Drinks, onRemove: () -> Unit) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            shape = MaterialTheme.shapes.medium,
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = drink.strDrink ?: "Unknown drink",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedButton(onClick = (onRemove)) {
-                    Text("Remove from favourites")
-                }
-            }
-        }
-    }*/
 
