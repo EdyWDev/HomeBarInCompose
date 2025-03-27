@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToSearchRecipe
@@ -153,7 +154,10 @@ fun DrinksDetailsScreen(
                     horizontalArrangement = Arrangement.End,
                    // verticalAlignment = Alignment.BottomEnd
                 ){
-                    IconButton(onClick = { onFavouriteClick(drink) }) {
+                    IconButton(onClick = {
+                         drink?.let { onFavouriteClick (it)}
+                       // onFavouriteClick(drink)
+                    }) {
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = "Add to favourites",

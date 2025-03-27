@@ -19,9 +19,22 @@ class FavouriteViewModel @Inject constructor(
     private val _favouriteDrinks = MutableStateFlow<List<Drinks>>(emptyList())
     val favouriteDrinks: StateFlow<List<Drinks>> = _favouriteDrinks
 
-    init{
+    init {
+        loadFavouriteDrinks()
+    }
+    private fun loadFavouriteDrinks(){
         viewModelScope.launch {
             _favouriteDrinks.value = recipeRepository.getFavouriteDrinks()
         }
+    }
+
+    fun removeFromFavourites(drink: Drinks){
+        viewModelScope.launch {
+            recipeRepository.removeFavourite(drink.idDrink.toString())
+            loadFavouriteDrinks()
+        }
+    }
+    fun refreshFavouriteDrinks(){
+        loadFavouriteDrinks()
     }
 }

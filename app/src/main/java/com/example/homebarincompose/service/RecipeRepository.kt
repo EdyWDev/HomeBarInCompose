@@ -20,7 +20,6 @@ class RecipeRepository @Inject constructor(
         val url = "$COCKTAIL_BY_NAME$cocktailName"
         Log.d("API_REQUEST_NAME", "URL: $url")
         return homeBarInComposeService.getRecipe(url).toDomainRecipeModel()
-        Log.d("API_RESPONSE_NAME", "Response")
     }
 
     suspend fun getRecipeByIngredients(ingredients: String): Recipe{
@@ -46,7 +45,7 @@ class RecipeRepository @Inject constructor(
     private val favouriteDrinks = mutableSetOf<String>()
 
     suspend fun isFavourite(drinkId: String): Boolean{
-        return favouriteDrinks.contains(drinkId)
+        return favouriteDrinks.contains(drinkId) || sharedPreferences.getStringSet("favouritesDrinks", emptySet())?.contains(drinkId) == true
     }
 
     fun addFavourite(drink: Drinks){
@@ -62,13 +61,13 @@ class RecipeRepository @Inject constructor(
     suspend fun getFavouriteDrinks(): List<Drinks>{
         return favouriteDrinks.mapNotNull { id -> getDrinkByID(id) }
     }
-    private fun saveFavouritesDrinks(){
+    fun saveFavouritesDrinks(){
         val editor = sharedPreferences.edit()
-        editor.putString("favouriteDrinks", favouriteDrinks.toString())
+        editor.putStringSet("favouriteDrinks", favouriteDrinks)
         editor.apply()
     }
 
-    private fun loadFavouriteDrinks(){
+     private fun loadFavouriteDrinks(){
         val savedFavouriteDrinks = sharedPreferences.getStringSet("favouriteDrinks", mutableSetOf()) ?: mutableSetOf()
         favouriteDrinks.clear()
         favouriteDrinks.addAll(savedFavouriteDrinks)

@@ -59,8 +59,17 @@ class DrinksDetailsViewModel @Inject constructor(
             } else{
                 recipeRepository.addFavourite(drink)
             }
-            _viewState.update { currentState ->
+            /*_viewState.update { currentState ->
                 currentState.copy(isFavourite = recipeRepository.isFavourite(drink.idDrink.toString()))
+            }*/
+            updateFavouriteList()
+        }
+    }
+    private fun updateFavouriteList(){
+        viewModelScope.launch {
+            val favouriteDrinks = recipeRepository.getFavouriteDrinks()
+            _viewState.update { currentState ->
+                currentState.copy(drinkList = favouriteDrinks)
             }
         }
     }
