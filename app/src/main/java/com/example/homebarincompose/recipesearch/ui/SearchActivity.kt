@@ -115,7 +115,6 @@ class SearchActivity : ComponentActivity() {
 @Composable
 fun Switch(innerPadding: PaddingValues) {
     LazyColumn(
-
         modifier = Modifier.fillMaxSize(),
         contentPadding = innerPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -193,7 +192,7 @@ fun SearchScreen(
             .padding(paddingValues)
             .verticalScroll(scrollState)
     ) {
-        Text(text = "  Find Your Recipe",
+        Text(text = "Find Your Recipe",
             letterSpacing = 5.sp,
             fontFamily = FontFamily.Cursive,
             textAlign = TextAlign.Center,

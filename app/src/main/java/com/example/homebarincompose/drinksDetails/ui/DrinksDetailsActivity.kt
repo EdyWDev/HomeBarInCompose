@@ -66,7 +66,7 @@ class DrinksDetailsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val drinkId = intent.getIntExtra("DRINK_ID", 0) /*?: ""*/
-        Log.d("DrinksDetailsActivity", "Received DRINK_ID: $drinkId")
+        Log.d("DrinksDetails", "Received DRINK_ID: $drinkId")
         viewModel.fetchDrinkDetails(drinkId.toString())
         setContent {
             HomeBarTheme {

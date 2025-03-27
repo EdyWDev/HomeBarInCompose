@@ -1,23 +1,19 @@
 package com.example.homebarincompose.favourite.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.AlertDialogDefaults.shape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,8 +30,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.example.homebarincompose.drinksDetails.ui.DrinksDetailsActivity
 import com.example.homebarincompose.favourite.FavouriteViewModel
 import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.ui.theme.HomeBarTheme
@@ -58,7 +57,7 @@ class FavouriteActivity : ComponentActivity() {
                             title = { Text("Favourite Drinks") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
-                                    Icon(Icons.Filled.ArrowBack, "back", tint = Color.Black)
+                                    Icon(Icons.Filled.ArrowBack, "back", tint = Color.White)
                                 }
                             }
                         )
@@ -66,8 +65,7 @@ class FavouriteActivity : ComponentActivity() {
                 ) { paddingValues ->
                     FavouriteDrinkScreen(
                         favouriteDrinks = favouriteDrinks,
-                        paddingValues = paddingValues,
-                        viewModel
+                        paddingValues = paddingValues
                     )
                 }
             }
@@ -75,69 +73,41 @@ class FavouriteActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavouriteDrinkScreen(
-    favouriteDrinks: List<Drinks>,
-    paddingValues: PaddingValues,
-    viewModel: FavouriteViewModel
+fun FavouriteDrinkCard(
+    drink: Drinks,
+    onDrinkClick: (Drinks) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-    ) {
-        if(favouriteDrinks.isEmpty()){
-            Text(
-                text = "No favourite drinks yet!",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                textAlign = TextAlign.Center,
-                color = Color.Gray
-            )
-        } else{
-            LazyColumn (
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ){
-                items(favouriteDrinks){drink ->
-                    DrinkItem(drink = drink, onRemove = {viewModel.refreshFavouriteDrinks()})
-
-
-                }
-            }
-        }
-
-        favouriteDrinks.forEach { drink ->
-            Text(drink.strDrink ?: "Unknown drink")
-            Button(
-                onClick = {
-                    viewModel.removeFromFavourites(drink)
-                }) {
-                Text("Remove from favourites")
-            }
-        }
-    }
-}
-@Composable
-fun DrinkItem(drink: Drinks, onRemove: () -> Unit){
     Card(
         modifier = Modifier
+            .padding(8.dp)
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ){
+            .clickable { onDrinkClick(drink) },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+    ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Text(text = drink.strDrink ?: "Unknown drink", style = MaterialTheme.typography.titleMedium)
+            modifier = Modifier.padding(16.dp)
+        ) {
+            AsyncImage(
+                model = drink.strDrinkThumb, contentDescription = drink.strDrink,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentScale = ContentScale.Crop
+            )
             Spacer(modifier = Modifier.height(8.dp))
-            OutlinedButton(onClick = (onRemove)) {
-                Text("Remove from favourites")
-            }
+
+            Text(
+                text = drink.strDrink ?: "Unknown drink",
+                style = MaterialTheme.typography.labelMedium
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = drink.strInstructions?.take(80) + "...",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
+            )
         }
     }
 }
@@ -147,4 +117,44 @@ fun FavouriteDrinkScreen(
     favouriteDrinks: List<Drinks>,
     paddingValues: PaddingValues
 ) {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier.padding(paddingValues)
+    ) {
+        favouriteDrinks.forEach { drink ->
+            FavouriteDrinkCard(drink = drink, onDrinkClick = {
+                val intent = Intent(context, DrinksDetailsActivity::class.java)
+                intent.putExtra("DRINK_ID", drink.idDrink)
+                context.startActivity(intent)
+            }
+            )
+        }
+    }
 }
+
+
+/*    @Composable
+    fun DrinkItem(drink: Drinks, onRemove: () -> Unit) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            shape = MaterialTheme.shapes.medium,
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = drink.strDrink ?: "Unknown drink",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedButton(onClick = (onRemove)) {
+                    Text("Remove from favourites")
+                }
+            }
+        }
+    }*/
+

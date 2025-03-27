@@ -35,7 +35,24 @@ class RecipeRepository @Inject constructor(
 
     suspend fun getDrinkByID(id: String): Drinks?{
         val url = "$COCKTAIL_BY_ID$id"
-        return homeBarInComposeService.getRecipeById(url).toDomainRecipeModel().drinks[0]
+        try{
+            val response = homeBarInComposeService.getRecipeById(url).toDomainRecipeModel()
+            Log.d("RecipeRepository", "Received response: $response")
+
+            return if(response.drinks.isNotEmpty()){
+                response.drinks[0]
+            } else{
+                Log.w("RecipeRepository", "No drinks found for ID: $id")
+                null
+            }
+        }
+        catch (e: Exception) {
+            Log.e("RecipeRepository", "Error fetching drink by ID", e)
+            return null
+        }
+
+
+       // return homeBarInComposeService.getRecipeById(url).toDomainRecipeModel().drinks[0]
     }
 
     private val sharedPreferences: SharedPreferences =
