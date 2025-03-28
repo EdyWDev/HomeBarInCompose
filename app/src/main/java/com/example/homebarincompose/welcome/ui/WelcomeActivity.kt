@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -45,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -57,6 +59,7 @@ import coil.request.ImageRequest
 import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToDetailsActivity
 import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToFavouriteActivity
 import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToSearchRecipe
+import com.example.homebarincompose.R
 import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.ui.theme.HomeBarTheme
 import com.example.homebarincompose.welcome.WelcomeViewModel
@@ -102,10 +105,8 @@ fun FirstView(
     onRandomDrinkClicked: () -> Unit,
     onShowDetailsFromRandomClicked: (Int) -> Unit
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        WaveBackground(modifier = Modifier.fillMaxSize())
+
+    Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -123,6 +124,7 @@ fun FirstView(
                 )
             }
         ) { innerPadding ->
+            GradientBackground()
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -140,7 +142,8 @@ fun FirstView(
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
-                /*   Image(
+
+                   Image(
                        painter = painterResource(id = R.drawable.mohito_removebg_preview),
                        contentDescription = "Cocktail Image",
                        modifier = Modifier
@@ -148,7 +151,7 @@ fun FirstView(
                            .height(250.dp)
                            .clip(RoundedCornerShape(16.dp)),
                        contentScale = ContentScale.Crop
-                   )*/
+                   )
                 Spacer(modifier = Modifier.padding(8.dp))
 
                 ActionButton(
@@ -262,9 +265,23 @@ fun RandomDrinkCard(drink: Drinks, onClick: (Int) -> Unit) {
     }
 }
 
+@Composable
+fun GradientBackground() {
+    val colors = listOf(
+        Color(0xFF42A5F5),  // Jasnoniebieski
+        Color(0xFF66BB6A)
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.linearGradient(colors)
+            )
+    )
+}
 
 @Composable
-fun WaveBackground(modifier: Modifier = Modifier) {
+fun WaveBackground() {
     val gradient = Brush.linearGradient(
         colors = listOf(
             Color(0xFF5F9EA0),
@@ -275,7 +292,7 @@ fun WaveBackground(modifier: Modifier = Modifier) {
     )
     val waveColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f)
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(gradient)
     ) {
