@@ -5,18 +5,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.Image
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -32,17 +34,19 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,7 +57,6 @@ import coil.request.ImageRequest
 import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToDetailsActivity
 import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToFavouriteActivity
 import com.example.homebarincompose.HomeBarNavigationManager.HomeBarNavigationManager.navigateToSearchRecipe
-import com.example.homebarincompose.R
 import com.example.homebarincompose.recipesearch.model.Drinks
 import com.example.homebarincompose.ui.theme.HomeBarTheme
 import com.example.homebarincompose.welcome.WelcomeViewModel
@@ -99,168 +102,105 @@ fun FirstView(
     onRandomDrinkClicked: () -> Unit,
     onShowDetailsFromRandomClicked: (Int) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "HomeBar",
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                },
-                colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingValues = innerPadding)
-        ) {/*
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 4.dp, vertical = 4.dp)
-                    .fillMaxWidth(),
-            ) {
-
-            }*/
-            Text(text = " Find Your Recipe",
-                style = TextStyle(
-                    fontFamily = FontFamily.Cursive,
-                    fontSize = 42.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center,
-                    letterSpacing = 1.sp
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Image(
-                painter = painterResource(id = R.drawable.mohito_removebg_preview),
-                contentDescription = "Coctail Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                    //.aspectRatio(16f / 16f)
-                contentScale = ContentScale.Crop
-            )
-            ActionButton(
-                text = "FIND A RECIPE",
-                onClick = findARecipeClicked
-            )
-            ActionButton(
-                text = "FAVOURITE",
-                onClick = favouriteClicked
-            )
-            ActionButton(
-                text = "RANDOM COCKTAIL",
-                onClick = onRandomDrinkClicked
-            )
-
-            /*   Button(
-                   onClick = findARecipeClicked,
-                   modifier = Modifier
-                       .fillMaxWidth()
-                       .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 16.dp),
-                   shape = RoundedCornerShape(corner = CornerSize(16.dp))
-               ) {
-                   Text(
-                       text = "FIND A RECIPE",
-                       color = Color.Black
-                   )
-               }
-               Button(
-                   onClick = favouriteClicked,
-                   modifier = Modifier
-                       .fillMaxWidth()
-                       .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                   shape = RoundedCornerShape(corner = CornerSize(16.dp))
-               ) {
-                   Text(
-                       text = "FAVOURITE",
-                       color = Color.Black
-                   )
-               }
-               Button(
-                   onClick = onRandomDrinkClicked,
-                   modifier = Modifier
-                       .fillMaxWidth()
-                       .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                   shape = RoundedCornerShape(corner = CornerSize(16.dp))
-               ) {
-                   Text(
-                       text = "RANDOM COCKTAIL",
-                       color = Color.Black
-                   )
-               }*/
-            /*randomDrink?.let {
-                if (!it.strDrinkThumb.isNullOrBlank() && !it.strDrink.isNullOrBlank() && it.idDrink != null) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                            .clickable {
-                                onShowDetailsFromRandomClicked.invoke(it.idDrink)
-                            },
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.background
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        WaveBackground(modifier = Modifier.fillMaxSize())
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "HomeBar",
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
-                        //,
-                        //   onClick = { onShowDetailsFromRandomClicked.invoke(it.idDrink) }
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            val localContext = LocalContext.current
-                            AsyncImage(
-                                model = ImageRequest.Builder(localContext)
-                                    .data(it.strDrinkThumb)
-                                    .build(),
-                                contentDescription = "This is a drink image",
-                                contentScale = ContentScale.FillHeight,
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                            )
+                    },
+                    colors = TopAppBarDefaults.smallTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                )
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                Text(
+                    text = " Find Your Recipe",
+                    style = TextStyle(
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 42.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center,
+                        letterSpacing = 1.sp
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                /*   Image(
+                       painter = painterResource(id = R.drawable.mohito_removebg_preview),
+                       contentDescription = "Cocktail Image",
+                       modifier = Modifier
+                           .fillMaxWidth()
+                           .height(250.dp)
+                           .clip(RoundedCornerShape(16.dp)),
+                       contentScale = ContentScale.Crop
+                   )*/
+                Spacer(modifier = Modifier.padding(8.dp))
 
-                                Text(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    text = it.strDrink,
-                                    textAlign = TextAlign.Center
-                                )
+                ActionButton(
+                    text = "FIND A RECIPE",
+                    onClick = findARecipeClicked
+                )
+                ActionButton(
+                    text = "FAVOURITE",
+                    onClick = favouriteClicked
+                )
+                ActionButton(
+                    text = "RANDOM COCKTAIL",
+                    onClick = onRandomDrinkClicked
+                )
 
-                        }
+                randomDrink?.let {
+                    if (!it.strDrinkThumb.isNullOrBlank() && !it.strDrink.isNullOrBlank() && it.idDrink != null) {
+                        RandomDrinkCard(
+                            drink = it,
+                            onClick = onShowDetailsFromRandomClicked
+                        )
                     }
-                }
-            }*/
-            randomDrink?.let{
-                if(!it.strDrinkThumb.isNullOrBlank() && !it.strDrink.isNullOrBlank() && it.idDrink != null){
-                    RandomDrinkCard(
-                        drink = it,
-                        onClick = onShowDetailsFromRandomClicked)
                 }
             }
         }
     }
 }
+
+
 @Composable
 fun ActionButton(text: String, onClick: () -> Unit) {
+    var isHovered = remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (isHovered.value) 1.1f else 1f,
+        animationSpec = tween(durationMillis = 300), label = ""
+    )
     Button(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .graphicsLayer(scaleX = scale, scaleY = scale),
         shape = RoundedCornerShape(24.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = Color.White
-        )
+        ),
+        // elevation = ButtonDefaults.elevation(8.dp)
+        interactionSource = remember {
+            MutableInteractionSource()
+        }
     ) {
         Text(
             text = text,
@@ -274,45 +214,88 @@ fun RandomDrinkCard(drink: Drinks, onClick: (Int) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp)
+            .padding(16.dp)
             .clickable { onClick(drink.idDrink ?: 0) },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        //  elevation = 4.dp
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(drink.strDrinkThumb)
                     .build(),
                 contentDescription = "Drink Image",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(0.4f)
+                    .size(180.dp)
                     .clip(RoundedCornerShape(16.dp)),
-                contentScale = ContentScale.Crop
-            )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(0.6f)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = drink.strDrink ?: "No Name",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.onSurface
-                    ),
-                    textAlign = TextAlign.Center
                 )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = drink.strDrink ?: "No Name",
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Button(
+                onClick = { drink.idDrink?.let { onClick(it) } },
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                Text(text = "View recipe", fontSize = 16.sp)
             }
+        }
+    }
+}
+
+
+@Composable
+fun WaveBackground(modifier: Modifier = Modifier) {
+    val gradient = Brush.linearGradient(
+        colors = listOf(
+            Color(0xFF5F9EA0),
+            Color(0xFFB0E0E6)
+        ),
+        start = Offset(0f, 0f),
+        end = Offset(0f, Float.POSITIVE_INFINITY)
+    )
+    val waveColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f)
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(gradient)
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val wavePath = androidx.compose.ui.graphics.Path().apply {
+                moveTo(0f, size.height * 0.7f)
+                cubicTo(
+                    size.width * 0.25f, size.height * 0.5f,
+                    size.width * 0.75f, size.height * 0.9f,
+                    size.width, size.height * 0.7f
+                )
+                lineTo(size.width, size.height)
+                lineTo(0f, size.height)
+                close()
+            }
+            drawPath(
+                path = wavePath,
+                color = waveColor
+                // color = Color(0x99000000)
+            )
         }
     }
 }
