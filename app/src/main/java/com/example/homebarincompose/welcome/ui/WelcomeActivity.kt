@@ -40,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -124,7 +125,8 @@ fun FirstView(
                 )
             }
         ) { innerPadding ->
-            GradientBackground()
+            CocktailBackground()
+          //  GradientBackground()
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -142,8 +144,9 @@ fun FirstView(
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
+              //  ImageWithBlur()
 
-                Image(
+              /* Image(
                     painter = painterResource(id = R.drawable.mohito_removebg_preview),
                     contentDescription = "Cocktail Image",
                     modifier = Modifier
@@ -151,7 +154,7 @@ fun FirstView(
                         .height(250.dp)
                         .clip(RoundedCornerShape(16.dp)),
                     contentScale = ContentScale.Crop
-                )
+                )*/
                 Spacer(modifier = Modifier.padding(8.dp))
 
                 ActionButton(
@@ -219,6 +222,7 @@ fun RandomDrinkCard(drink: Drinks, onClick: (Int) -> Unit) {
             .fillMaxWidth()
             .padding(16.dp)
             .clickable { onClick(drink.idDrink ?: 0) },
+            //.shadow(8.dp, RoundedCornerShape(16.dp)),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
@@ -264,6 +268,52 @@ fun RandomDrinkCard(drink: Drinks, onClick: (Int) -> Unit) {
         }
     }
 }
+@Composable
+fun CocktailBackground(){
+    val color1 = Color(0xFFFFA726)
+    val color2 = Color(0xFF42A5F5)
+    val color3 = Color(0xFF9C27B0)
+    val color4 = Color(0xFF4CAF50)
+
+    Box(modifier = Modifier.fillMaxSize()){
+        Canvas(modifier = Modifier.fillMaxSize()){
+            drawRoundRect(
+                color = color1,
+                size = size.copy(width = size.width, height = size.height/1.8f),
+                topLeft = Offset(0f,0f),
+                cornerRadius = CornerRadius.Zero
+            )
+            drawRoundRect(
+                color = color2,
+                size = size.copy(width = size.width, height = size.height/2f),
+                topLeft = Offset(0f, size.height/2f),
+                cornerRadius = CornerRadius.Zero
+            )
+            drawCircle(
+                color = color3.copy(alpha = 0.5f),
+                radius = 10f,
+                center = Offset(size.width * 0.2f, size.height * 0.3f)
+            )
+            drawCircle(
+                color = color4.copy(alpha=0.3f),
+                radius = 8f,
+                center = Offset(size.width * 0.8f, size.height * 0.6f)
+            )
+
+            drawCircle(
+                color = color1.copy(alpha = 0.3f),
+                radius = 15f,
+                center = Offset(size.width * 0.5f, size.height * 0.8f)
+            )
+
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.2f))
+        )
+    }
+}
 
 @Composable
 fun GradientBackground() {
@@ -282,7 +332,7 @@ fun GradientBackground() {
 
 @Composable
 fun ImageWithBlur() {
-    val image = painterResource(id = R.drawable.img)
+    val image = painterResource(id = R.drawable.mohito_removebg_preview)
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(250.dp)
