@@ -6,7 +6,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -14,6 +19,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -133,9 +139,9 @@ fun FirstView(
                 )
             }
         ) { innerPadding ->
-            CocktailWaveBackground()
+            DynamicGradientBackground()
             //CocktailBackground()
-            // GradientBackground()
+            //GradientBackground()
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -410,12 +416,42 @@ fun CocktailBackground() {
         )
     }
 }
+@Composable
+fun DynamicGradientBackground() {
+    val isDarkMode = isSystemInDarkTheme()
+    val colors = if (isDarkMode) {
+        listOf(
+            Color(0xFF2C3E50), // Ciemniejszy odcień
+            Color(0xFF34495E),
+            Color(0xFF7F8C8D),
+            Color(0xFFBDC3C7)
+        )
+    } else {
+        listOf(
+            Color(0xFF6EC1E4), // Lazurowy błękit
+            Color(0xFF4B6D7D), // Szaro-niebieski
+            Color(0xFFD7C6B3),
+            Color(0xFFFFC1C1) // Blady różowy
+        )
+    }
 
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.linearGradient(colors)
+            )
+    )
+}
 @Composable
 fun GradientBackground() {
     val colors = listOf(
-        Color(0xFF42A5F5),  // Jasnoniebieski
-        Color(0xFF66BB6A)
+       // Blady różowy
+        Color(0xFF6EC1E4), // Lazurowy błękit
+        Color(0xFF4B6D7D), // Szaro-niebieski
+        Color(0xFFD7C6B3),
+        Color(0xFFFFC1C1),
+
     )
     Box(
         modifier = Modifier
