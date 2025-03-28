@@ -143,15 +143,15 @@ fun FirstView(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                   Image(
-                       painter = painterResource(id = R.drawable.mohito_removebg_preview),
-                       contentDescription = "Cocktail Image",
-                       modifier = Modifier
-                           .fillMaxWidth()
-                           .height(250.dp)
-                           .clip(RoundedCornerShape(16.dp)),
-                       contentScale = ContentScale.Crop
-                   )
+                Image(
+                    painter = painterResource(id = R.drawable.mohito_removebg_preview),
+                    contentDescription = "Cocktail Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop
+                )
                 Spacer(modifier = Modifier.padding(8.dp))
 
                 ActionButton(
@@ -278,6 +278,28 @@ fun GradientBackground() {
                 brush = Brush.linearGradient(colors)
             )
     )
+}
+
+@Composable
+fun ImageWithBlur() {
+    val image = painterResource(id = R.drawable.img)
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(250.dp)
+        .clip(RoundedCornerShape(16.dp))
+    ){
+        Image(
+            painter = image,
+            contentDescription = "Drink Image",
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(16.dp)),
+            contentScale = ContentScale.Crop
+        )
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f)))
+    }
 }
 
 @Composable
