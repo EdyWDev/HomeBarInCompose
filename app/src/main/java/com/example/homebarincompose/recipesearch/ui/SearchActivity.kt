@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,16 +26,21 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -44,6 +50,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
@@ -119,8 +126,6 @@ fun Switch(innerPadding: PaddingValues) {
         contentPadding = innerPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-
-
         item {
             val switchStateForName = remember { mutableStateOf(false) }
             Row(
@@ -129,18 +134,18 @@ fun Switch(innerPadding: PaddingValues) {
                 Text(
                     modifier = Modifier
                         .padding(16.dp),
-                    text = "Search for recipe by NAME",
-                    fontStyle = FontStyle.Italic,
-                    fontWeight = FontWeight.Bold
+                    text = "Search by NAME",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
                 )
                 Switch(
                     checked = switchStateForName.value,
                     onCheckedChange = { switchStateForName.value = it },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.DarkGray,
+                        checkedThumbColor = Color.Green,
                         uncheckedThumbColor = Color.Gray,
-                        checkedTrackColor = Color.White.copy(alpha = 1.0f),
-                        uncheckedTrackColor = Color.Blue.copy(alpha = 1.0f),
+                        checkedTrackColor = Color.LightGray,
+                        uncheckedTrackColor = Color.DarkGray,
                     ),
                 )
             }
@@ -155,8 +160,7 @@ fun Switch(innerPadding: PaddingValues) {
                 Text(
                     modifier = Modifier
                         .padding(16.dp),
-                    text = "Search for recipe by INGREDIENTS",
-                    fontStyle = FontStyle.Italic,
+                    text = "Search by INGREDIENTS",
                     fontWeight = FontWeight.Bold
                 )
                 Switch(
@@ -166,8 +170,8 @@ fun Switch(innerPadding: PaddingValues) {
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.DarkGray,
                         uncheckedThumbColor = Color.Gray,
-                        checkedTrackColor = Color.White.copy(alpha = 1.0f),
-                        uncheckedTrackColor = Color.Blue.copy(alpha = 1.0f),
+                        checkedTrackColor = Color.LightGray,
+                        uncheckedTrackColor = Color.DarkGray,
                     ),
                 )
             }
@@ -192,12 +196,14 @@ fun SearchScreen(
             .padding(paddingValues)
             .verticalScroll(scrollState)
     ) {
-        Text(text = "Find Your Recipe",
-            letterSpacing = 5.sp,
-            fontFamily = FontFamily.Cursive,
+        Text(
+            text = "Find Your Recipe",
+            letterSpacing = 1.sp,
+            fontFamily = FontFamily.Monospace,
             textAlign = TextAlign.Center,
-            fontSize = 48.sp,
-            //   modifier = Modifier.foldIn()
+            fontSize = 38.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(vertical = 24.dp)
         )
 
         Row(
@@ -219,6 +225,11 @@ fun SearchScreen(
                 },
                 onClick = { onSearchCategoryClicked.invoke(TypeOfSearchEnum.NAME) },
                 selected = state.selectedTypeOfSearch == TypeOfSearchEnum.NAME,
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = Color.Gray.copy(alpha = 0.1f),
+                    labelColor = Color.White
+                )
+
             )
             FilterChip(
                 modifier = Modifier
@@ -234,7 +245,11 @@ fun SearchScreen(
                     )
                 },
                 onClick = { onSearchCategoryClicked.invoke(TypeOfSearchEnum.INGREDIENTS) },
-                selected = state.selectedTypeOfSearch == TypeOfSearchEnum.INGREDIENTS
+                selected = state.selectedTypeOfSearch == TypeOfSearchEnum.INGREDIENTS,
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = Color.Gray.copy(alpha = 0.1f),
+                    labelColor = Color.White
+                )
             )
         }
 
@@ -243,12 +258,10 @@ fun SearchScreen(
         TextField(
 
             value = text,
-            // tu wprowadzic zmiane
             onValueChange = { newText ->
                 text = newText
                 onDoneKeyboard(newText)
             },
-            /*onValueChange = { text = it }*/
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
@@ -263,9 +276,17 @@ fun SearchScreen(
             {
                 onDoneKeyboard(text)
             }
+            ),
+            colors = TextFieldDefaults.textFieldColors(
+                //textColor = Color.Black,
+                //backgroundColor = Color.White,
+                focusedIndicatorColor = Color.Blue,
+                unfocusedIndicatorColor = Color.Gray,
+                focusedLabelColor = Color.Blue,
+                unfocusedLabelColor = Color.Gray
+            )
             )
 
-        )
 
         Log.d("SearchScreen", "Drink list; ${state.drinksList}")
         state.drinksList.forEach { item ->
@@ -286,7 +307,9 @@ fun ListOfDrinks(items: Drinks) {
                 val intent = Intent(context, DrinksDetailsActivity::class.java)
                 intent.putExtra("DRINK_ID", items.idDrink)
                 context.startActivity(intent)
-            }
+            },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = MaterialTheme.shapes.medium
     ) {
         Column(
             modifier = Modifier
@@ -294,26 +317,29 @@ fun ListOfDrinks(items: Drinks) {
                 .padding(horizontal = 8.dp)
         ) {
 
-
             Spacer(modifier = Modifier.width(16.dp))
             items.strDrink?.let { strDrink ->
                 Text(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
                     text = strDrink,
-                    color = Color.Red,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Light,
+                    color = Color.Black,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Italic,
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
             items.strDrinkThumb?.let { strDrinksThumb ->
                 AsyncImage(
                     model = ImageRequest.Builder(context)
                         .data(strDrinksThumb)
+                        .crossfade(true)
                         .build(),
                     contentDescription = "This is a drink image",
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(180.dp)
+                        .clip(MaterialTheme.shapes.medium)
                 )
             }
         }
