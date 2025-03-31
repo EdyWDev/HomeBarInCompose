@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,15 +20,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,8 +35,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -49,7 +45,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -120,67 +115,6 @@ class SearchActivity : ComponentActivity() {
     }
 }
 
-
-@Composable
-fun Switch(innerPadding: PaddingValues) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = innerPadding,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        item {
-            val switchStateForName = remember { mutableStateOf(false) }
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    text = "Search by NAME",
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                Switch(
-                    checked = switchStateForName.value,
-                    onCheckedChange = { switchStateForName.value = it },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.Green,
-                        uncheckedThumbColor = Color.Gray,
-                        checkedTrackColor = Color.LightGray,
-                        uncheckedTrackColor = Color.DarkGray,
-                    ),
-                )
-            }
-
-        }
-        item {
-
-            val switchStateForIngredients = remember { mutableStateOf(false) }
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    text = "Search by INGREDIENTS",
-                    fontWeight = FontWeight.Bold
-                )
-                Switch(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    checked = switchStateForIngredients.value,
-                    onCheckedChange = { switchStateForIngredients.value = it },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.DarkGray,
-                        uncheckedThumbColor = Color.Gray,
-                        checkedTrackColor = Color.LightGray,
-                        uncheckedTrackColor = Color.DarkGray,
-                    ),
-                )
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
@@ -193,118 +127,140 @@ fun SearchScreen(
     paddingValues: PaddingValues
 ) {
     val scrollState = rememberScrollState()
-    Column(
+
+    Box(
         Modifier
-            .padding(paddingValues)
-            .verticalScroll(scrollState)
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        /*MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)*/
+                        Color(0xFFA9A9A9),
+                        Color(0xFFA2B9C4),
+                        Color(0xFFA9A9A9),
+                        Color(0xFFA2B9C4)
+                    )
+                )
+            )
     ) {
-        Text(
-            text = "Find Your Recipe",
-            letterSpacing = 1.sp,
-            fontFamily = FontFamily.Monospace,
-            textAlign = TextAlign.Center,
-            fontSize = 38.sp,
-            fontWeight = FontWeight.Bold,
+        Column(
             modifier = Modifier
-                .padding(vertical = 24.dp)
-                .fillMaxWidth()
+                .padding(paddingValues)
+                .verticalScroll(scrollState)
+        ) {
+            Text(
+                text = "Find Your Recipe",
+                letterSpacing = 1.sp,
+                fontFamily = FontFamily.Monospace,
+                textAlign = TextAlign.Center,
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 40.dp)
+                /*modifier = Modifier
+                    .padding(vertical = 40.dp)
+                    .fillMaxWidth()
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(
                             Color(0xFF6EC1E4),
-                            Color(0xFF4B6D7D)
+                            Color(0xFF4B6D7D),
+                            Color(0xFFD7C6B3),
+                            Color(0xFFFFC1C1),
                         )
                     )
                 )
-                .padding(16.dp)
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            FilterChip(
+                .padding(40.dp)
+            )*/
+            )
+            Row(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .weight(0.5F)
-                    .clip(MaterialTheme.shapes.small),
-                label = {
-                    Text(
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                FilterChip(
+                    modifier = Modifier
+                        .weight(0.45F)
+                        .clip(MaterialTheme.shapes.small),
+                    label = {
+                        Text(/*
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        textAlign = TextAlign.Center,
-                        text = "Name"
+                        textAlign = TextAlign.Center,*/
+                            text = "Name"
+                        )
+                    },
+                    onClick = { onSearchCategoryClicked.invoke(TypeOfSearchEnum.NAME) },
+                    selected = state.selectedTypeOfSearch == TypeOfSearchEnum.NAME,
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = Color.Gray.copy(alpha = 0.1f),
+                        labelColor = Color.White
                     )
-                },
-                onClick = { onSearchCategoryClicked.invoke(TypeOfSearchEnum.NAME) },
-                selected = state.selectedTypeOfSearch == TypeOfSearchEnum.NAME,
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = Color.Gray.copy(alpha = 0.1f),
-                    labelColor = Color.White
-                )
 
-            )
-            FilterChip(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .weight(0.5F)
-                    .clip(MaterialTheme.shapes.small),
-                label = {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        textAlign = TextAlign.Center,
-                        text = "Ingredients"
+                )
+                FilterChip(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .weight(0.45F)
+                        .clip(MaterialTheme.shapes.small),
+                    label = {
+                        Text(
+                            /*modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            textAlign = TextAlign.Center,*/
+                            text = "Ingredients"
+                        )
+                    },
+                    onClick = { onSearchCategoryClicked.invoke(TypeOfSearchEnum.INGREDIENTS) },
+                    selected = state.selectedTypeOfSearch == TypeOfSearchEnum.INGREDIENTS,
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = Color.Gray.copy(alpha = 0.1f),
+                        labelColor = Color.White
                     )
-                },
-                onClick = { onSearchCategoryClicked.invoke(TypeOfSearchEnum.INGREDIENTS) },
-                selected = state.selectedTypeOfSearch == TypeOfSearchEnum.INGREDIENTS,
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = Color.Gray.copy(alpha = 0.1f),
-                    labelColor = Color.White
                 )
-            )
-        }
-
-        var text by remember { mutableStateOf("") }
-
-        TextField(
-
-            value = text,
-            onValueChange = { newText ->
-                text = newText
-                onDoneKeyboard(newText)
-            },
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .clip(MaterialTheme.shapes.medium),
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null
-                )
-            },
-            keyboardActions = KeyboardActions(onDone =
-            {
-                onDoneKeyboard(text)
             }
-            ),
-            colors = TextFieldDefaults.textFieldColors(
-                focusedIndicatorColor = Color.Blue,
-                unfocusedIndicatorColor = Color.Gray,
-                focusedLabelColor = Color.Blue,
-                unfocusedLabelColor = Color.Gray
-            )
-            )
 
+            Spacer(modifier = Modifier.height(20.dp))
 
-        Log.d("SearchScreen", "Drink list; ${state.drinksList}")
-        state.drinksList.forEach { item ->
-            ListOfDrinks(items = item)
+            var text by remember { mutableStateOf("") }
+
+            TextField(
+
+                value = text,
+                onValueChange = { newText ->
+                    text = newText
+                    onDoneKeyboard(newText)
+                },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                //    .clip(MaterialTheme.shapes.medium),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null
+                    )
+                },
+                keyboardActions = KeyboardActions(onDone =
+                {
+                    onDoneKeyboard(text)
+                }
+                ),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Blue,
+                    unfocusedIndicatorColor = Color.Gray,
+                    focusedLabelColor = Color.Blue,
+                    unfocusedLabelColor = Color.Gray
+                )
+            )
+            state.drinksList.forEach { item ->
+                ListOfDrinks(items = item)
+            }
         }
     }
 }
@@ -331,7 +287,7 @@ fun ListOfDrinks(items: Drinks) {
                 .padding(16.dp)
         ) {
 
-          //  Spacer(modifier = Modifier.width(16.dp))
+            //  Spacer(modifier = Modifier.width(16.dp))
             items.strDrink?.let { strDrink ->
                 Text(
                     modifier = Modifier.padding(bottom = 8.dp),
@@ -343,7 +299,7 @@ fun ListOfDrinks(items: Drinks) {
                     textAlign = TextAlign.Center
                 )
             }
-          //  Spacer(modifier = Modifier.height(8.dp))
+            //  Spacer(modifier = Modifier.height(8.dp))
             items.strDrinkThumb?.let { strDrinksThumb ->
                 AsyncImage(
                     model = ImageRequest.Builder(context)
