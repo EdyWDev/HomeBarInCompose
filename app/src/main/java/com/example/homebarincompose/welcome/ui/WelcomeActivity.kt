@@ -51,12 +51,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -120,6 +122,14 @@ fun FirstView(
     onRandomDrinkClicked: () -> Unit,
     onShowDetailsFromRandomClicked: (Int) -> Unit
 ) {
+    val gradient = Brush.linearGradient(
+        colors = listOf(
+            Color(0xFF6EC1E4),
+            Color(0xFF4B6D7D),
+            Color(0xFFD7C6B3),
+            Color(0xFFFFC1C1)
+        )
+    )
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -139,7 +149,8 @@ fun FirstView(
                 )
             }
         ) { innerPadding ->
-            DynamicGradientBackground()
+           // DynamicGradientBackground()
+            GradientBackgroundWithDrink()
             //CocktailBackground()
             //GradientBackground()
             Column(
@@ -155,24 +166,20 @@ fun FirstView(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
                         textAlign = TextAlign.Center,
-                        letterSpacing = 1.sp
+                        letterSpacing = 1.sp,
+                        lineHeight = 40.sp,
+                        shadow = Shadow(
+                            color = Color.Gray,
+                            offset = Offset(2f,2f),
+                            blurRadius = 4f
+                        )
                     ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 80.dp)
                 )
-                //  ImageWithBlur()
 
-                /* Image(
-                      painter = painterResource(id = R.drawable.mohito_removebg_preview),
-                      contentDescription = "Cocktail Image",
-                      modifier = Modifier
-                          .fillMaxWidth()
-                          .height(250.dp)
-                          .clip(RoundedCornerShape(16.dp)),
-                      contentScale = ContentScale.Crop
-                  )*/
-
-
-                Spacer(modifier = Modifier.height(140.dp))
+                Spacer(modifier = Modifier.height(100.dp))
 
                 ActionButton(
                     text = "FIND A RECIPE",
@@ -195,85 +202,6 @@ fun FirstView(
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun CocktailWaveBackground() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        Color(0xFF42A5F5),
-                        Color(0xFF66BB6A),
-                    ),
-                    start = Offset(0f, 0f),
-                    end = Offset(0f, Float.POSITIVE_INFINITY)
-                )
-            )
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val wavePath = androidx.compose.ui.graphics.Path().apply {
-                moveTo(0f, size.height * 0.8f)
-                cubicTo(
-                    size.width * 0.25f, size.height * 0.6f,
-                    size.width * 0.75f, size.height * 1.0f,
-                    size.width, size.height * 0.8f
-                )
-                lineTo(size.width, size.height)
-                lineTo(0f, size.height)
-                lineTo(0f, size.height)
-                close()
-            }
-            drawPath(
-                path = wavePath,
-                color = Color(0xFF81C784)
-            )
-        }
-        MistEffect()
-    }
-}
-
-@Composable
-fun BubbleEffect() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            for (i in 0..20) {
-                val radius = (10..30).random().toFloat()
-                val x = Random.nextFloat() * size.width
-                val y = Random.nextFloat() * (size.height * 0.6f) + (size.height * 0.125f)
-
-                drawCircle(
-                    color = Color.White.copy(alpha = 0.5f),
-                    radius = radius,
-                    center = Offset(x, y)
-                )
-            }
-
-        }
-    }
-}
-
-@Composable
-fun MistEffect() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val alpha = 0.1f
-            val mistColor = Color(0xFF90A4AE)
-            for (i in 0..15) {
-                val x = Random.nextFloat() * size.width
-                val y = Random.nextFloat() * size.height
-                val radius = (20..50).random().toFloat()
-
-                drawCircle(
-                    color = mistColor.copy(alpha = alpha),
-                    radius = radius,
-                    center = Offset(x, y)
-                )
             }
         }
     }
@@ -371,48 +299,26 @@ fun RandomDrinkCard(drink: Drinks, onClick: (Int) -> Unit) {
 }
 
 @Composable
-fun CocktailBackground() {
-    val color1 = Color(0xFFFFA726)
-    val color2 = Color(0xFF42A5F5)
-    val color3 = Color(0xFF9C27B0)
-    val color4 = Color(0xFF4CAF50)
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            drawRoundRect(
-                color = color1,
-                size = size.copy(width = size.width, height = size.height / 1.8f),
-                topLeft = Offset(0f, 0f),
-                cornerRadius = CornerRadius.Zero
-            )
-            drawRoundRect(
-                color = color2,
-                size = size.copy(width = size.width, height = size.height / 2f),
-                topLeft = Offset(0f, size.height / 2f),
-                cornerRadius = CornerRadius.Zero
-            )
-            drawCircle(
-                color = color3.copy(alpha = 0.5f),
-                radius = 10f,
-                center = Offset(size.width * 0.2f, size.height * 0.3f)
-            )
-            drawCircle(
-                color = color4.copy(alpha = 0.3f),
-                radius = 8f,
-                center = Offset(size.width * 0.8f, size.height * 0.6f)
-            )
-
-            drawCircle(
-                color = color1.copy(alpha = 0.3f),
-                radius = 15f,
-                center = Offset(size.width * 0.5f, size.height * 0.8f)
-            )
-
-        }
-        Box(
+fun GradientBackgroundWithDrink(){
+    val colors = listOf(
+        Color(0xFF6EC1E4),
+        Color(0xFF4B6D7D),
+        Color(0xFFD7C6B3),
+        Color(0xFFFFC1C1)
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(brush = Brush.linearGradient(colors))
+    ){
+        Image(
+            painter = painterResource(id = R.drawable.pinkgin),
+            contentDescription = "Pink gin drink",
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.2f))
+                .alpha(0.4f)
+                .clip(RoundedCornerShape(0.dp)),
+            contentScale = ContentScale.Crop
         )
     }
 }
@@ -443,88 +349,6 @@ fun DynamicGradientBackground() {
             )
     )
 }
-@Composable
-fun GradientBackground() {
-    val colors = listOf(
-       // Blady różowy
-        Color(0xFF6EC1E4), // Lazurowy błękit
-        Color(0xFF4B6D7D), // Szaro-niebieski
-        Color(0xFFD7C6B3),
-        Color(0xFFFFC1C1),
-
-    )
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.linearGradient(colors)
-            )
-    )
-}
-
-@Composable
-fun ImageWithBlur() {
-    val image = painterResource(id = R.drawable.mohito_removebg_preview)
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-            .clip(RoundedCornerShape(16.dp))
-    ) {
-        Image(
-            painter = image,
-            contentDescription = "Drink Image",
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(RoundedCornerShape(16.dp)),
-            contentScale = ContentScale.Crop
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f))
-        )
-    }
-}
-
-@Composable
-fun WaveBackground() {
-    val gradient = Brush.linearGradient(
-        colors = listOf(
-            Color(0xFF5F9EA0),
-            Color(0xFFB0E0E6)
-        ),
-        start = Offset(0f, 0f),
-        end = Offset(0f, Float.POSITIVE_INFINITY)
-    )
-    val waveColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f)
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(gradient)
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val wavePath = androidx.compose.ui.graphics.Path().apply {
-                moveTo(0f, size.height * 0.7f)
-                cubicTo(
-                    size.width * 0.25f, size.height * 0.5f,
-                    size.width * 0.75f, size.height * 0.9f,
-                    size.width, size.height * 0.7f
-                )
-                lineTo(size.width, size.height)
-                lineTo(0f, size.height)
-                close()
-            }
-            drawPath(
-                path = wavePath,
-                color = waveColor
-                // color = Color(0x99000000)
-            )
-        }
-    }
-}
-
-
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
