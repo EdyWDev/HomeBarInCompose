@@ -5,7 +5,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -23,15 +25,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -121,17 +122,33 @@ fun FavouriteDrinkScreen(
     paddingValues: PaddingValues
 ) {
     val context = LocalContext.current
-    LazyColumn(
-        contentPadding = paddingValues,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(favouriteDrinks){ drink ->
-            FavouriteDrinkCard(drink = drink, onDrinkClick = {
-                val intent = Intent(context, DrinksDetailsActivity::class.java)
-                intent.putExtra("DRINK_ID", drink.idDrink)
-                context.startActivity(intent)
-            }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFFA9A9A9),
+                        Color(0xFFA2B9C4),
+                        Color(0xFFA9A9A9),
+                        Color(0xFFA2B9C4)
+                    )
+                )
             )
+    ) {
+        LazyColumn(
+            contentPadding = paddingValues,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(favouriteDrinks) { drink ->
+                FavouriteDrinkCard(drink = drink, onDrinkClick = {
+                    val intent = Intent(context, DrinksDetailsActivity::class.java)
+                    intent.putExtra("DRINK_ID", drink.idDrink)
+                    context.startActivity(intent)
+                }
+                )
+            }
         }
     }
 }
