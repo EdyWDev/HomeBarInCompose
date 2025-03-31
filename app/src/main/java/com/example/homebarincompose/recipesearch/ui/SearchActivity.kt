@@ -208,7 +208,14 @@ fun SearchScreen(
             modifier = Modifier
                 .padding(vertical = 24.dp)
                 .fillMaxWidth()
-                .background(brush = Brush.linearGradient(colors = listOf(Color(0xFF6EC1E4), Color(0xFF4B6D7D))))
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color(0xFF6EC1E4),
+                            Color(0xFF4B6D7D)
+                        )
+                    )
+                )
                 .padding(16.dp)
         )
 
@@ -309,33 +316,34 @@ fun ListOfDrinks(items: Drinks) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp)
+            .padding(16.dp)
             .clickable {
                 val intent = Intent(context, DrinksDetailsActivity::class.java)
                 intent.putExtra("DRINK_ID", items.idDrink)
                 context.startActivity(intent)
             },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = MaterialTheme.shapes.medium
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        shape = MaterialTheme.shapes.large
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(16.dp)
         ) {
 
-            Spacer(modifier = Modifier.width(16.dp))
+          //  Spacer(modifier = Modifier.width(16.dp))
             items.strDrink?.let { strDrink ->
                 Text(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                    modifier = Modifier.padding(bottom = 8.dp),
                     text = strDrink,
-                    color = Color.Black,
-                    fontSize = 22.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Italic,
+                    textAlign = TextAlign.Center
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
+          //  Spacer(modifier = Modifier.height(8.dp))
             items.strDrinkThumb?.let { strDrinksThumb ->
                 AsyncImage(
                     model = ImageRequest.Builder(context)
@@ -346,9 +354,12 @@ fun ListOfDrinks(items: Drinks) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(180.dp)
-                        .clip(MaterialTheme.shapes.medium)
+                        .clip(MaterialTheme.shapes.large)
+                        .background(Color.Gray.copy(alpha = 0.2f))
+                        .padding(4.dp)
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 
