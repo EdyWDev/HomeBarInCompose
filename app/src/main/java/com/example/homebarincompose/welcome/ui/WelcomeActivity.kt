@@ -169,17 +169,17 @@ fun FirstView(
                         letterSpacing = 1.sp,
                         lineHeight = 40.sp,
                         shadow = Shadow(
-                            color = Color.Gray,
-                            offset = Offset(2f,2f),
+                            color = Color.Black/*.copy(alpha = 0.5f)*/,
+                            offset = Offset(3f,3f),
                             blurRadius = 4f
                         )
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 80.dp)
+                        .padding(top = 200.dp)
                 )
 
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(40.dp))
 
                 ActionButton(
                     text = "FIND A RECIPE",
@@ -322,33 +322,7 @@ fun GradientBackgroundWithDrink(){
         )
     }
 }
-@Composable
-fun DynamicGradientBackground() {
-    val isDarkMode = isSystemInDarkTheme()
-    val colors = if (isDarkMode) {
-        listOf(
-            Color(0xFF2C3E50), // Ciemniejszy odcień
-            Color(0xFF34495E),
-            Color(0xFF7F8C8D),
-            Color(0xFFBDC3C7)
-        )
-    } else {
-        listOf(
-            Color(0xFF6EC1E4), // Lazurowy błękit
-            Color(0xFF4B6D7D), // Szaro-niebieski
-            Color(0xFFD7C6B3),
-            Color(0xFFFFC1C1) // Blady różowy
-        )
-    }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.linearGradient(colors)
-            )
-    )
-}
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
