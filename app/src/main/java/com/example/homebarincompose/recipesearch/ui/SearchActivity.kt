@@ -158,21 +158,7 @@ fun SearchScreen(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 40.dp)
-                /*modifier = Modifier
-                    .padding(vertical = 40.dp)
-                    .fillMaxWidth()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFF6EC1E4),
-                            Color(0xFF4B6D7D),
-                            Color(0xFFD7C6B3),
-                            Color(0xFFFFC1C1),
-                        )
-                    )
-                )
-                .padding(40.dp)
-            )*/
+
             )
             Row(
                 modifier = Modifier
@@ -185,19 +171,16 @@ fun SearchScreen(
                         .weight(0.45F)
                         .clip(MaterialTheme.shapes.small),
                     label = {
-                        Text(/*
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        textAlign = TextAlign.Center,*/
-                            text = "Name"
+                        Text(
+                            text = "Name",
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     },
                     onClick = { onSearchCategoryClicked.invoke(TypeOfSearchEnum.NAME) },
                     selected = state.selectedTypeOfSearch == TypeOfSearchEnum.NAME,
                     colors = FilterChipDefaults.filterChipColors(
-                        containerColor = Color.Gray.copy(alpha = 0.1f),
-                        labelColor = Color.White
+                        containerColor = Color(0xFF6A7D88).copy(alpha = 0.1f),
+                        labelColor = MaterialTheme.colorScheme.onBackground
                     )
 
                 )
@@ -208,18 +191,15 @@ fun SearchScreen(
                         .clip(MaterialTheme.shapes.small),
                     label = {
                         Text(
-                            /*modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            textAlign = TextAlign.Center,*/
-                            text = "Ingredients"
+                            text = "Ingredients",
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     },
                     onClick = { onSearchCategoryClicked.invoke(TypeOfSearchEnum.INGREDIENTS) },
                     selected = state.selectedTypeOfSearch == TypeOfSearchEnum.INGREDIENTS,
                     colors = FilterChipDefaults.filterChipColors(
-                        containerColor = Color.Gray.copy(alpha = 0.1f),
-                        labelColor = Color.White
+                        containerColor = Color(0xFF6A7D88).copy(alpha = 0.1f),
+                        labelColor = MaterialTheme.colorScheme.onBackground
                     )
                 )
             }
