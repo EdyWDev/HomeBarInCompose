@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
@@ -93,7 +95,7 @@ class SearchActivity : ComponentActivity() {
                             },
                             navigationIcon = {
                                 IconButton(onClick = { navigateToWelcomeActivity() }) {
-                                    Icon(Icons.Filled.ArrowBack, "back", tint = Color.Black)
+                                    Icon(Icons.Filled.ArrowBack, "back", tint = Color.White)
                                 }
                             }
                         )
@@ -203,7 +205,11 @@ fun SearchScreen(
             textAlign = TextAlign.Center,
             fontSize = 38.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = 24.dp)
+            modifier = Modifier
+                .padding(vertical = 24.dp)
+                .fillMaxWidth()
+                .background(brush = Brush.linearGradient(colors = listOf(Color(0xFF6EC1E4), Color(0xFF4B6D7D))))
+                .padding(16.dp)
         )
 
         Row(
@@ -213,7 +219,8 @@ fun SearchScreen(
             FilterChip(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
-                    .weight(0.5F),
+                    .weight(0.5F)
+                    .clip(MaterialTheme.shapes.small),
                 label = {
                     Text(
                         modifier = Modifier
@@ -234,7 +241,8 @@ fun SearchScreen(
             FilterChip(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
-                    .weight(0.5F),
+                    .weight(0.5F)
+                    .clip(MaterialTheme.shapes.small),
                 label = {
                     Text(
                         modifier = Modifier
@@ -265,7 +273,8 @@ fun SearchScreen(
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .clip(MaterialTheme.shapes.medium),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -278,8 +287,6 @@ fun SearchScreen(
             }
             ),
             colors = TextFieldDefaults.textFieldColors(
-                //textColor = Color.Black,
-                //backgroundColor = Color.White,
                 focusedIndicatorColor = Color.Blue,
                 unfocusedIndicatorColor = Color.Gray,
                 focusedLabelColor = Color.Blue,
