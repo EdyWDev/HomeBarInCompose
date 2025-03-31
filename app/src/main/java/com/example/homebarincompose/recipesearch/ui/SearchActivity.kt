@@ -218,12 +218,13 @@ fun SearchScreen(
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                //    .clip(MaterialTheme.shapes.medium),
+                    .padding(horizontal = 16.dp)
+                    .clip(MaterialTheme.shapes.medium),
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = null
+                        contentDescription = "Search",
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 keyboardActions = KeyboardActions(onDone =
@@ -231,11 +232,18 @@ fun SearchScreen(
                     onDoneKeyboard(text)
                 }
                 ),
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = Color.Blue,
-                    unfocusedIndicatorColor = Color.Gray,
-                    focusedLabelColor = Color.Blue,
-                    unfocusedLabelColor = Color.Gray
+                colors = TextFieldDefaults.colors(
+                    disabledTextColor = MaterialTheme.colorScheme.onBackground,
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedIndicatorColor = Color(0xFF6A7D88),
+                    unfocusedIndicatorColor = Color(0xFFB0BCC2),
+                    focusedLabelColor = Color(0xFF6A7D88),
+                    unfocusedLabelColor = Color(0xFFB0BCC2),
+                    disabledPlaceholderColor = Color.Gray,
+                    disabledLeadingIconColor = MaterialTheme.colorScheme.onSurface,
+                    disabledTrailingIconColor = MaterialTheme.colorScheme.onSurface
                 )
             )
             state.drinksList.forEach { item ->
