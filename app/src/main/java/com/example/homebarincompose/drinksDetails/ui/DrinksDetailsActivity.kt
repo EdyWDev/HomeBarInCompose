@@ -139,7 +139,6 @@ fun DrinksDetailsScreen(
                 .padding(paddingValues)
                 .fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-            //.verticalScroll(rememberScrollState())
         ) {
             item {
                 drink.strDrink?.let { strDrink ->
@@ -178,8 +177,7 @@ fun DrinksDetailsScreen(
                     // verticalAlignment = Alignment.BottomEnd
                 ) {
                     IconButton(onClick = {
-                        drink?.let { onFavouriteClick(it) }
-                        // onFavouriteClick(drink)
+                        onFavouriteClick(drink)
                     }) {
                         Icon(
                             imageVector = Icons.Default.Star,

@@ -22,7 +22,7 @@ class RecipeRepository @Inject constructor(
         return homeBarInComposeService.getRecipe(url).toDomainRecipeModel()
     }
 
-    suspend fun getRecipeByIngredients(ingredients: String): Recipe{
+    suspend fun getRecipeByIngredients(ingredients: String): Recipe {
         val url = "$COCKTAIL_BY_INGREDIENT$ingredients"
         Log.d("API_REQUEST_INGREDIENTS", "URL: $url")
         return homeBarInComposeService.getRecipe(url).toDomainRecipeModel()
@@ -33,26 +33,22 @@ class RecipeRepository @Inject constructor(
         return homeBarInComposeService.getRandomDrink(url).toDomainRecipeModel().drinks[0]
     }
 
-    suspend fun getDrinkByID(id: String): Drinks?{
+    suspend fun getDrinkByID(id: String): Drinks? {
         val url = "$COCKTAIL_BY_ID$id"
-        try{
+        try {
             val response = homeBarInComposeService.getRecipeById(url).toDomainRecipeModel()
             Log.d("RecipeRepository", "Received response: $response")
 
-            return if(response.drinks.isNotEmpty()){
+            return if (response.drinks.isNotEmpty()) {
                 response.drinks[0]
-            } else{
+            } else {
                 Log.w("RecipeRepository", "No drinks found for ID: $id")
                 null
             }
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             Log.e("RecipeRepository", "Error fetching drink by ID", e)
             return null
         }
-
-
-       // return homeBarInComposeService.getRecipeById(url).toDomainRecipeModel().drinks[0]
     }
 
     private val sharedPreferences: SharedPreferences =
@@ -60,43 +56,57 @@ class RecipeRepository @Inject constructor(
 
 
     private val favouriteDrinks = mutableSetOf<String>()
+    private val drinkCache = mutableListOf<Drinks>()
 
-    suspend fun isFavourite(drinkId: String): Boolean{
-        return favouriteDrinks.contains(drinkId) || sharedPreferences.getStringSet("favouritesDrinks", emptySet())?.contains(drinkId) == true
+    suspend fun isFavourite(drinkId: String): Boolean {
+        return favouriteDrinks.contains(drinkId) || sharedPreferences.getStringSet(
+            "favouritesDrinks",
+            emptySet()
+        )?.contains(drinkId) == true
     }
 
-    fun addFavourite(drink: Drinks){
+    fun addFavourite(drink: Drinks) {
         favouriteDrinks.add((drink.idDrink.toString()))
+        drinkCache.add(drink)
         saveFavouritesDrinks()
     }
 
-    fun removeFavourite(drinkId: String){
+    fun removeFavourite(drinkId: String) {
         favouriteDrinks.remove(drinkId)
+        drinkCache.removeIf { it.idDrink.toString() == drinkId }
         saveFavouritesDrinks()
     }
 
-    suspend fun getFavouriteDrinks(): List<Drinks>{
-        return favouriteDrinks.mapNotNull { id -> getDrinkByID(id) }
+    suspend fun getFavouriteDrinks(): List<Drinks> {
+        if(drinkCache.isEmpty()){
+            val savedIds = sharedPreferences.getStringSet("favouriteDrinks", emptySet()) ?: emptySet()
+            drinkCache.addAll(savedIds.mapNotNull { getDrinkByID(it) })
+        }
+        return drinkCache
+        //return favouriteDrinks.mapNotNull { id -> getDrinkByID(id) }
     }
-    fun saveFavouritesDrinks(){
+
+    private fun saveFavouritesDrinks() {
         val editor = sharedPreferences.edit()
         editor.putStringSet("favouriteDrinks", favouriteDrinks)
         editor.apply()
     }
 
-     private fun loadFavouriteDrinks(){
-        val savedFavouriteDrinks = sharedPreferences.getStringSet("favouriteDrinks", mutableSetOf()) ?: mutableSetOf()
+    private fun loadFavouriteDrinks() {
+        val savedFavouriteDrinks =
+            sharedPreferences.getStringSet("favouriteDrinks", mutableSetOf()) ?: mutableSetOf()
         favouriteDrinks.clear()
         favouriteDrinks.addAll(savedFavouriteDrinks)
     }
+
     init {
         loadFavouriteDrinks()
     }
 }
 
 
-fun DrinksDTO?.toDomainRecipeModel(): Recipe{
-    return Recipe(drinks=this?.drinks?.map {
+fun DrinksDTO?.toDomainRecipeModel(): Recipe {
+    return Recipe(drinks = this?.drinks?.map {
         Drinks(
             idDrink = it.idDrink,
             strDrink = it.strDrink,
