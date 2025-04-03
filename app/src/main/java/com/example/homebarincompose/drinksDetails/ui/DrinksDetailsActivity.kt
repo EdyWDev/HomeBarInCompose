@@ -207,7 +207,7 @@ fun DrinksDetailsScreen(
                     modifier = Modifier.padding(vertical = 16.dp),
                     text = "INGREDIENTS",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
+                    fontSize = 22.sp,
                     color = Color.Black
                 )
             }

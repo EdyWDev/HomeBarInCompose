@@ -4,8 +4,24 @@ package com.example.homebarincompose.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val LightPrimary = Color(0xFF6EC1E4)  // Błękit
+val LightSecondary = Color(0xFF4B6D7D)  // Grafitowy niebieski
+val LightBackground = Color(0xFFD7C6B3)  // Piaskowy beż
+val LightSurface = Color(0xFFFFC1C1)  // Jasny róż
 
-val primaryLight = Color(0xFF35618E)
+val DarkPrimary = Color(0xFF2C4E72)  // Ciemniejszy błękit
+val DarkSecondary = Color(0xFF3C4C59)  // Ciemniejszy grafitowy niebieski
+val DarkBackground = Color(0xFFB1A695)  // Ciemniejszy beż
+val DarkSurface = Color(0xFFD09B9B)  // Przytłumiony róż
+
+val GrayBackground = Color(0xFFA9A9A9)  // Szary (tło)
+val BlueBackground = Color(0xFFA2B9C4)  // Błękitny (tło)
+
+// Możemy teraz przyciemnić tło w trybie dark mode
+val DarkGrayBackground = Color(0xFF6A6A6A)  // Przyciemniony szary
+val DarkBlueBackground = Color(0xFF6C7F8A)  // Przyciemniony błękitny
+
+/*val primaryLight = Color(0xFF35618E)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFD1E4FF)
 val onPrimaryContainerLight = Color(0xFF001D36)
@@ -219,7 +235,7 @@ val surfaceContainerLowestDarkHighContrast = Color(0xFF090F10)
 val surfaceContainerLowDarkHighContrast = Color(0xFF171D1E)
 val surfaceContainerDarkHighContrast = Color(0xFF1B2122)
 val surfaceContainerHighDarkHighContrast = Color(0xFF252B2C)
-val surfaceContainerHighestDarkHighContrast = Color(0xFF303637)
+val surfaceContainerHighestDarkHighContrast = Color(0xFF303637)*/
 
 
 
