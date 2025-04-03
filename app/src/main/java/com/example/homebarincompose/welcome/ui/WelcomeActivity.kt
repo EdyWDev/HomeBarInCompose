@@ -132,27 +132,8 @@ fun FirstView(
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "HomeBar",
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    },
-                    colors = TopAppBarDefaults.smallTopAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                )
-            }
-        ) { innerPadding ->
-           // DynamicGradientBackground()
+        Scaffold { innerPadding ->
             GradientBackgroundWithDrink()
-            //CocktailBackground()
-            //GradientBackground()
             Column(
                 modifier = Modifier
                     .fillMaxSize()
