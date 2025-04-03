@@ -77,11 +77,11 @@ class DrinksDetailsActivity : ComponentActivity() {
                     topBar = {
                         TopAppBar(
                             title = {
-                                Text("Drinks Details", color = Color.White)
+                                Text("Drinks Details", color = MaterialTheme.colorScheme.onPrimary)
                             },
                             navigationIcon = {
                                 IconButton(onClick = { navigateToSearchRecipe() }) {
-                                    Icon(Icons.Filled.ArrowBack, "back", tint = Color.White)
+                                    Icon(Icons.Filled.ArrowBack, "back", tint = MaterialTheme.colorScheme.onPrimary)
                                 }
                             }
                         )
@@ -93,10 +93,8 @@ class DrinksDetailsActivity : ComponentActivity() {
                             .background(
                                 Brush.verticalGradient(
                                     colors = listOf(
-                                        Color(0xFFA9A9A9),
-                                        Color(0xFFA2B9C4),
-                                        Color(0xFFA9A9A9),
-                                        Color(0xFFA2B9C4)
+                                        MaterialTheme.colorScheme.primary,
+                                        MaterialTheme.colorScheme.secondary
                                     )
                                 )
                             )
@@ -120,7 +118,6 @@ class DrinksDetailsActivity : ComponentActivity() {
 
 @Composable
 fun DrinksDetailsScreen(
-    //   drinkId: String,
     state: DrinksDetailsViewState,
     paddingValues: PaddingValues,
     onFavouriteClick: (Drinks) -> Unit
@@ -148,7 +145,7 @@ fun DrinksDetailsScreen(
                         text = strDrink,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -208,7 +205,7 @@ fun DrinksDetailsScreen(
                     text = "INGREDIENTS",
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
@@ -221,7 +218,7 @@ fun DrinksDetailsScreen(
                             fontSize = 16.sp,
                             letterSpacing = 0.5.sp,
                             lineHeight = 22.sp,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onSurface
                         )
 
                     )
@@ -233,7 +230,7 @@ fun DrinksDetailsScreen(
                     text = "INSTRUCTION",
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
@@ -246,7 +243,7 @@ fun DrinksDetailsScreen(
                             fontSize = 16.sp,
                             letterSpacing = 0.5.sp,
                             lineHeight = 22.sp,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     )
                 }
