@@ -31,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -153,19 +154,26 @@ fun DrinksDetailsScreen(
             }
             item {
                 drink.strDrinkThumb?.let { strDrinkThumb ->
-                    AsyncImage(
-                        model = ImageRequest.Builder(context)
-                            .data(strDrinkThumb)
-                            .build(),
-                        contentDescription = "This is a drink image",
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(300.dp)
+                            .padding(16.dp)
                             .clip(MaterialTheme.shapes.medium)
                             .shadow(8.dp, shape = MaterialTheme.shapes.medium)
-                            .padding(16.dp),
-                        contentScale = ContentScale.FillBounds
-                    )
+                    ){
+                        AsyncImage(
+                            model = ImageRequest.Builder(context)
+                                .data(strDrinkThumb)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = "This is a drink image",
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentScale = ContentScale.FillBounds
+                        )
+                    }
+
                 }
             }
             item {
