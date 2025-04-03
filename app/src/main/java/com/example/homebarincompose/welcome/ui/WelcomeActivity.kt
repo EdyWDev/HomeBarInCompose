@@ -20,6 +20,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -137,30 +138,10 @@ fun FirstView(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(innerPadding),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = " Find Your Recipe",
-                    style = TextStyle(
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 42.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary,
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 1.sp,
-                        lineHeight = 40.sp,
-                        shadow = Shadow(
-                            color = Color.Black/*.copy(alpha = 0.5f)*/,
-                            offset = Offset(3f,3f),
-                            blurRadius = 4f
-                        )
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 200.dp)
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
 
                 ActionButton(
                     text = "FIND A RECIPE",
