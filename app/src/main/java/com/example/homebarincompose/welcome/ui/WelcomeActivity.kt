@@ -223,13 +223,14 @@ fun RandomDrinkCard(drink: Drinks, onClick: (Int) -> Unit) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(drink.strDrinkThumb)
+                    .crossfade(true)
                     .build(),
                 contentDescription = "Drink Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(180.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .border(2.dp, MaterialTheme.colorScheme.primary),
+                    .border(2.dp, MaterialTheme.colorScheme.primary)
+                    .clip(RoundedCornerShape(12.dp)),
                 )
 
             Spacer(modifier = Modifier.height(12.dp))
